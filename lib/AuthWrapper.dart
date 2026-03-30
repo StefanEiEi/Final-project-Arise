@@ -11,7 +11,7 @@ class AuthWrapper extends StatelessWidget {
     return StreamBuilder<User?>(
       stream: FirebaseAuth.instance.authStateChanges(),
       builder: (context, snapshot) {
-        // โชว์ Loading ก่อน
+        // โชว์ Loading
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             backgroundColor: Color(0xFF0A101C),
@@ -21,7 +21,7 @@ class AuthWrapper extends StatelessWidget {
 
         // 2. มีบัญชีอยู่แล้วไปหน้า Dashboard 
         if (snapshot.hasData) {
-          return const DashboardPage(); // หน้าหลักของโปรเจกต์ Arise
+          return const DashboardPage(); 
         }
 
         // 3. ไม่มีบัญชีไปหน้า Login เริ่มต้น

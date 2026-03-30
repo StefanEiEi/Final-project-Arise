@@ -4,6 +4,7 @@ import 'AuthWrapper.dart';
 import 'RegisterPage.dart';
 import 'CalibrationPage.dart';
 import 'DashboardPage.dart';
+import 'RestPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,14 +21,14 @@ class AriseApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'ARISE!',
       theme: ThemeData(brightness: Brightness.dark),
-      home: const AuthWrapper(),
+      home: DashboardPage(),
+      // home: const AuthWrapper(),
 
-      routes: {
-        '/registration': (context) => const RegisterPage(),
-        '/calibration': (context) => const CalibrationPage(),
-        '/dashboard': (context) => const DashboardPage(),
-      },
-      
+      // routes: {
+      //   '/registration': (context) => const RegisterPage(),
+      //   '/calibration': (context) => const CalibrationPage(),
+      //   '/dashboard': (context) => const DashboardPage(),
+      // },
     );
   }
 }
