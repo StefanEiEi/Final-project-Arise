@@ -3,6 +3,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 import 'Rank.dart';
 import 'Muscle.dart';
+import 'SettingsPage.dart';
+import 'ProfilePage.dart';
+import 'QuestData.dart';
 
 class DashboardPage extends StatelessWidget {
   const DashboardPage({super.key});
@@ -28,13 +31,13 @@ class DashboardPage extends StatelessWidget {
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
             children: [
-              _buildHeader(),
+              _buildHeader(context), // ส่ง context
               const SizedBox(height: 20),
-              _buildProfileCard(userLevel, userExp),
+              _buildProfileCard(context, userLevel, userExp), // ส่ง context
               const SizedBox(height: 30),
               _buildBodyMap(muscles),
               const SizedBox(height: 20),
-              _buildActionButtons(),
+              _buildActionButtons(context),
               const SizedBox(height: 30),
               _buildStatusSection(muscles),
             ],
@@ -45,8 +48,8 @@ class DashboardPage extends StatelessWidget {
   }
 
   // --- UI Components ---
-
-  Widget _buildHeader() {
+  Widget _buildHeader(BuildContext context) {
+    // เพิ่ม context
     return Padding(
       padding: const EdgeInsets.symmetric(horizontal: 20),
       child: Row(
@@ -75,7 +78,26 @@ class DashboardPage extends StatelessWidget {
               ),
             ],
           ),
-          const Icon(Icons.settings, color: Colors.cyan, size: 28),
+          Row(
+            // รวมไอคอนปุ่มกดไว้ด้วยกัน
+            children: [
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const ProfilePage()),
+                ),
+                child: const Icon(Icons.person, color: Colors.cyan, size: 28),
+              ),
+              const SizedBox(width: 10),
+              GestureDetector(
+                onTap: () => Navigator.push(
+                  context,
+                  MaterialPageRoute(builder: (context) => const SettingsPage()),
+                ),
+                child: const Icon(Icons.settings, color: Colors.cyan, size: 28),
+              ),
+            ],
+          ),
         ],
       ),
     );
@@ -98,42 +120,48 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildProfileCard(int level, int exp) {
-    return Container(
-      width: 350,
-      padding: const EdgeInsets.all(20),
-      decoration: BoxDecoration(
-        color: const Color(0xFF13172B),
-        borderRadius: BorderRadius.circular(20),
+  Widget _buildProfileCard(BuildContext context, int level, int exp) {
+    return GestureDetector(
+      onTap: () => Navigator.push(
+        context,
+        MaterialPageRoute(builder: (context) => const ProfilePage()),
       ),
-      child: Row(
-        children: [
-          Image.asset('assets/images/logo.png', width: 80),
-          const SizedBox(width: 15),
-          Expanded(
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  'Hunter X',
-                  style: const TextStyle(color: Colors.white, fontSize: 18),
-                ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Text(
-                      'LEVEL $level',
-                      style: const TextStyle(color: Color(0xFF7892B0)),
-                    ),
-                    _rankBadge(AriseRank.getLabel(level)),
-                  ],
-                ),
-                const SizedBox(height: 10),
-                _expBar(exp),
-              ],
+      child: Container(
+        width: 350,
+        padding: const EdgeInsets.all(20),
+        decoration: BoxDecoration(
+          color: const Color(0xFF13172B),
+          borderRadius: BorderRadius.circular(20),
+        ),
+        child: Row(
+          children: [
+            Image.asset('assets/images/logo.png', width: 80),
+            const SizedBox(width: 15),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  const Text(
+                    'Hunter X',
+                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'LEVEL $level',
+                        style: const TextStyle(color: Color(0xFF7892B0)),
+                      ),
+                      _rankBadge(AriseRank.getLabel(level)),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  _expBar(exp),
+                ],
+              ),
             ),
-          ),
-        ],
+          ],
+        ),
       ),
     );
   }
@@ -198,20 +226,29 @@ class DashboardPage extends StatelessWidget {
     );
   }
 
-  Widget _buildActionButtons() {
+  Widget _buildActionButtons(BuildContext context) {
+    // เพิ่ม context
     return Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
-        _btn('START MISSION', const Color(0xFFFF0055)),
+        _btn('START MISSION', const Color(0xFFFF0055), () {
+          Navigator.push(
+            context,
+            MaterialPageRoute(builder: (context) => const SelectQuestPage()),
+          );
+        }),
         const SizedBox(width: 20),
-        _btn('REST', const Color(0xFF00FC97)),
+        _btn('REST', const Color(0xFF00FC97), () {
+          // โลจิกสำหรับปุ่ม REST ในหน้า Dashboard (Skip Day)
+          print("Skip exercise day");
+        }),
       ],
     );
   }
 
-  Widget _btn(String label, Color color) {
+  Widget _btn(String label, Color color, VoidCallback onPressed) {
     return ElevatedButton(
-      onPressed: () {},
+      onPressed: onPressed, // ใส่ onPressed
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),

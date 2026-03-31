@@ -26,6 +26,32 @@ class _ProfilePageState extends State<ProfilePage> {
   // ตัวแปรเก็บสถานะเพศ (เริ่มต้นเป็น Male)
   String selectedGender = 'Male';
 
+  // ฟังก์ชันสำหรับส่วนหัวที่มีปุ่มย้อนกลับ
+  Widget _buildHeader(BuildContext context) {
+    return Padding(
+      padding: const EdgeInsets.only(bottom: 10),
+      child: Row(
+        children: [
+          IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: Colors.white,
+              size: 24,
+            ),
+            onPressed: () {
+              if (Navigator.canPop(context)) {
+                Navigator.pop(context);
+              } else {
+                print("System: ไม่สามารถย้อนกลับได้ (นี่คือหน้าแรก)");
+              }
+            },
+          ),
+          _buildProfileTag(), // ย้าย tag มาไว้ข้างปุ่มย้อนกลับ
+        ],
+      ),
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -69,7 +95,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
     if (picked != null) {
       setState(() {
-        // ฟอร์แมตวันที่ให้เป็น DD/MM/YYYY
         dobController.text =
             "${picked.day.toString().padLeft(2, '0')}/${picked.month.toString().padLeft(2, '0')}/${picked.year}";
       });
@@ -88,8 +113,9 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildProfileTag(),
-                const SizedBox(height: 15),
+                _buildHeader(context), // แก้ไขจาก _buildProfileTag() เป็นตัวนี้
+                const SizedBox(height: 5), // ปรับระยะห่างเล็กน้อย
+
                 _buildUserCard(),
 
                 _buildSectionTitle('Personal Information'),
@@ -171,9 +197,6 @@ class _ProfilePageState extends State<ProfilePage> {
       decoration: BoxDecoration(
         color: cardBg,
         borderRadius: BorderRadius.circular(20),
-        boxShadow: const [
-          BoxShadow(color: Colors.black26, blurRadius: 5, offset: Offset(0, 2)),
-        ],
       ),
       child: Row(
         children: [

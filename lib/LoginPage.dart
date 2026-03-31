@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'RegisterPage.dart';
 
 class LoginPage extends StatelessWidget {
@@ -22,7 +23,7 @@ class LoginPage extends StatelessWidget {
           idToken: googleAuth.idToken,
         );
 
-        // 4. Login เข้า Firebase 
+        // 4. Login เข้า Firebase
         await FirebaseAuth.instance.signInWithCredential(credential);
 
         print("Login สำเร็จ");
@@ -42,7 +43,7 @@ class LoginPage extends StatelessWidget {
             child: Image.asset('assets/images/BG.jpg', fit: BoxFit.cover),
           ),
 
-          // Main 
+          // Main
           Center(
             child: SingleChildScrollView(
               child: Column(
@@ -156,19 +157,25 @@ class LoginPage extends StatelessWidget {
                           ),
                         ),
                       ),
-                      InkWell(
-                        splashColor: Colors.transparent,
-                        focusColor: Colors.transparent,
-                        hoverColor: Colors.transparent,
-                        highlightColor: Colors.transparent,
-                        onTap: () async {},
+                      GestureDetector(
+                        onTap: () async {
+                          await signInWithGoogle();
+                          if (FirebaseAuth.instance.currentUser != null) {
+                            Navigator.pushReplacement(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => const RegisterPage(),
+                              ),
+                            );
+                          }
+                        },
                         child: Text(
-                          'Sign-up',
-                          style: TextStyle(
-                            fontFamily: 'Orbitron',
-                            color: Colors.white,
+                          'Sign Up',
+                          style: GoogleFonts.inter(
+                            color: const Color(0xFF00FFFF),
                             fontWeight: FontWeight.bold,
-                            fontSize: 14,
+                            decoration: TextDecoration
+                                .underline, // ขีดเส้นใต้ให้รู้ว่ากดได้
                           ),
                         ),
                       ),
