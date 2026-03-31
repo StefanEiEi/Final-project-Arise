@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'WorkoutProvider.dart';
 import 'DashboardPage.dart';
 
 class CompletedPage extends StatelessWidget {
@@ -14,6 +16,16 @@ class CompletedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final provider = context.watch<WorkoutProvider>();
+    int totalExp =
+        provider.chestExp +
+        provider.shoulderExp +
+        provider.bicepsExp +
+        provider.absExp +
+        provider.legsExp;
+    int currentLevel = 1 + (totalExp ~/ 100);
+    double targetExpPercent = (totalExp % 100) / 100.0;
+
     return Scaffold(
       backgroundColor: bgDark,
       body: SafeArea(
@@ -41,27 +53,34 @@ class CompletedPage extends StatelessWidget {
               const SizedBox(height: 30),
 
               // 2. การ์ดสรุปตัวละคร (Hunter Summary)
-              _buildHunterCard(),
+              _buildHunterCard(currentLevel, targetExpPercent),
               const SizedBox(height: 20),
 
               // 3. การ์ดอัปเดตสเตตัส (Status Update)
-              _buildStatusCard(context),
+              _buildStatusCard(context, provider),
               const SizedBox(height: 40),
 
-              // 4. ปุ่ม BACK (กลับสู่ Dashboard)
+              // 4. ปุ่ม BACK 
               SizedBox(
                 width: double.infinity,
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () {
-                    // ล้างหน้าจอทั้งหมดแล้วกลับไปที่ Dashboard
-                    Navigator.pushAndRemoveUntil(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => const DashboardPage(),
-                      ),
-                      (route) => false,
-                    );
+                    // ตรวจสอบว่าทำครบทุกอันแล้วหรือยัง
+                    bool isAllDone = provider.questStatus.every((status) => status);
+
+                    if (isAllDone) {
+                      Navigator.pushAndRemoveUntil(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => const DashboardPage(),
+                        ),
+                        (route) => false, // กลับ Dashboard สิ้นสุดการออกกำลังกาย
+                      );
+                    } else {
+                      // Navigate specifically back to the quest selection screen
+                      Navigator.pop(context);
+                    }
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: cyanAccent,
@@ -72,7 +91,7 @@ class CompletedPage extends StatelessWidget {
                     elevation: 5,
                   ),
                   child: Text(
-                    'BACK TO HUB',
+                    provider.questStatus.every((status) => status) ? 'FINISH WORKOUT' : 'BACK TO QUESTS',
                     style: GoogleFonts.orbitron(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
@@ -89,7 +108,7 @@ class CompletedPage extends StatelessWidget {
 
   // --- UI Components ---
 
-  Widget _buildHunterCard() {
+  Widget _buildHunterCard(int level, double targetExpPercent) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -124,7 +143,7 @@ class CompletedPage extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      'LEVEL 1',
+                      'LEVEL $level',
                       style: GoogleFonts.orbitron(
                         color: const Color(0xFF8899AA),
                         fontSize: 13,
@@ -153,24 +172,33 @@ class CompletedPage extends StatelessWidget {
                   ],
                 ),
                 const SizedBox(height: 10),
-                // EXP Bar
-                LinearProgressIndicator(
-                  value: 0.65,
-                  backgroundColor: Colors.white10,
-                  color: cyanAccent,
-                  minHeight: 8,
-                  borderRadius: BorderRadius.circular(8),
-                ),
-                const SizedBox(height: 4),
-                Align(
-                  alignment: Alignment.centerRight,
-                  child: Text(
-                    '65/100 EXP',
-                    style: GoogleFonts.orbitron(
-                      color: cyanAccent,
-                      fontSize: 10,
-                    ),
-                  ),
+                // EXP Bar Animation
+                TweenAnimationBuilder<double>(
+                  tween: Tween<double>(begin: 0.0, end: targetExpPercent),
+                  duration: const Duration(milliseconds: 1500),
+                  curve: Curves.elasticOut,
+                  builder: (context, value, child) {
+                    return Column(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      children: [
+                        LinearProgressIndicator(
+                          value: value,
+                          backgroundColor: Colors.white10,
+                          color: cyanAccent,
+                          minHeight: 8,
+                          borderRadius: BorderRadius.circular(8),
+                        ),
+                        const SizedBox(height: 4),
+                        Text(
+                          '${(value * 100).toInt()}/100 EXP',
+                          style: GoogleFonts.orbitron(
+                            color: cyanAccent,
+                            fontSize: 10,
+                          ),
+                        ),
+                      ],
+                    );
+                  },
                 ),
               ],
             ),
@@ -180,7 +208,7 @@ class CompletedPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusCard(BuildContext context) {
+  Widget _buildStatusCard(BuildContext context, WorkoutProvider provider) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -200,11 +228,36 @@ class CompletedPage extends StatelessWidget {
             ),
           ),
           const SizedBox(height: 20),
-          _statusRow('Shoulder', 15, 16, 0.9),
-          _statusRow('Biceps', 10, 11, 0.6),
-          _statusRow('Breast', 10, 11, 0.4),
-          _statusRow('Abs', 20, 21, 0.75),
-          _statusRow('Leg', 15, 16, 0.55),
+          _statusRow(
+            'Shoulder',
+            provider.shoulderExp,
+            provider.shoulderExp + 1,
+            (provider.shoulderExp % 10) / 10.0,
+          ),
+          _statusRow(
+            'Biceps',
+            provider.bicepsExp,
+            provider.bicepsExp + 1,
+            (provider.bicepsExp % 10) / 10.0,
+          ),
+          _statusRow(
+            'Breast',
+            provider.chestExp,
+            provider.chestExp + 1,
+            (provider.chestExp % 10) / 10.0,
+          ),
+          _statusRow(
+            'Abs',
+            provider.absExp,
+            provider.absExp + 1,
+            (provider.absExp % 10) / 10.0,
+          ),
+          _statusRow(
+            'Leg',
+            provider.legsExp,
+            provider.legsExp + 1,
+            (provider.legsExp % 10) / 10.0,
+          ),
         ],
       ),
     );

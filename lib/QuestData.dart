@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
+import 'package:provider/provider.dart';
+import 'WorkoutProvider.dart';
 
 import 'CalibrationPage.dart';
 import 'DashboardPage.dart';
@@ -63,6 +65,9 @@ class _SelectQuestPageState extends State<SelectQuestPage> {
               child: PageView.builder(
                 controller: _pageController,
                 itemCount: quests.length,
+                onPageChanged: (index) {
+                  setState(() {});
+                },
                 itemBuilder: (context, index) => _buildQuestCard(quests[index]),
               ),
             ),
@@ -76,39 +81,55 @@ class _SelectQuestPageState extends State<SelectQuestPage> {
               ),
             ),
 
-            Padding(
-              padding: const EdgeInsets.only(bottom: 30),
-              child: SizedBox(
-                width: MediaQuery.of(context).size.width * 0.7,
-                height: 55,
-                child: ElevatedButton(
-                  onPressed: () {
-                    if (widget.currentSet < 3) {
-                      // ⚡ ส่ง currentSet ไปหน้า Calibration
-                      Navigator.push(
-                        context,
-                        MaterialPageRoute(builder: (context) => CalibrationPage(currentSet: widget.currentSet)),
-                      );
-                    } else {
-                      // ⚡ ครบ 3 เซ็ตแล้ว กลับหน้าหลัก!
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => const DashboardPage()),
-                        (route) => false,
-                      );
-                    }
-                  },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+            Consumer<WorkoutProvider>(
+              builder: (context, provider, child) {
+                int currentIndex = _pageController.hasClients && _pageController.page != null
+                    ? _pageController.page!.round()
+                    : 0;
+
+                bool isCurrentQuestDone = provider.questStatus[currentIndex];
+                bool isAllDone = provider.questStatus.every((status) => status);
+
+                Color btnBgColor = Colors.white;
+                Color btnTextColor = Colors.black;
+                String btnText = 'ACCEPT QUEST';
+
+                if (isAllDone) {
+                  btnBgColor = Colors.green;
+                  btnText = 'MISSION COMPLETED';
+                } else if (isCurrentQuestDone) {
+                  btnBgColor = Colors.blue;
+                  btnText = 'DONE';
+                }
+
+                return Padding(
+                  padding: const EdgeInsets.only(bottom: 30),
+                  child: SizedBox(
+                    width: MediaQuery.of(context).size.width * 0.7,
+                    height: 55,
+                    child: ElevatedButton(
+                      onPressed: (isAllDone || isCurrentQuestDone) ? null : () {
+                        // we pass currentIndex + 1 as currentSet so other pages know which quest it is
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(builder: (context) => CalibrationPage(currentSet: currentIndex + 1)),
+                        );
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: btnBgColor,
+                        foregroundColor: btnTextColor,
+                        disabledBackgroundColor: isAllDone ? Colors.green : Colors.blue.withOpacity(0.4),
+                        disabledForegroundColor: isAllDone ? Colors.black : Colors.black54,
+                        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+                      ),
+                      child: Text(
+                        btnText,
+                        style: GoogleFonts.orbitron(fontSize: 18, fontWeight: FontWeight.bold),
+                      ),
+                    ),
                   ),
-                  child: Text(
-                    widget.currentSet < 3 ? 'ACCEPT QUEST' : 'DONE', // ⚡ เปลี่ยนคำเมื่อถึงเซ็ตสุดท้าย
-                    style: GoogleFonts.orbitron(fontSize: 18, fontWeight: FontWeight.bold),
-                  ),
-                ),
-              ),
+                );
+              },
             ),
           ],
         ),

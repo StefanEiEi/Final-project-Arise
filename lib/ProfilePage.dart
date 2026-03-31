@@ -28,9 +28,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   // ฟังก์ชันสำหรับส่วนหัวที่มีปุ่มย้อนกลับ
   Widget _buildHeader(BuildContext context) {
-    return Padding(
-      padding: const EdgeInsets.only(bottom: 10),
+    return SizedBox(
+      height: 70,
       child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
             icon: const Icon(
@@ -46,7 +47,15 @@ class _ProfilePageState extends State<ProfilePage> {
               }
             },
           ),
-          _buildProfileTag(), // ย้าย tag มาไว้ข้างปุ่มย้อนกลับ
+          Text(
+            'PROFILE',
+            style: GoogleFonts.orbitron(
+              color: cyanAccent,
+              fontSize: 24,
+              fontWeight: FontWeight.bold,
+            ),
+          ),
+          const SizedBox(width: 48), // ล็อกระยะให้ Title อยู่ตรงกลาง
         ],
       ),
     );
@@ -172,24 +181,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  Widget _buildProfileTag() {
-    return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
-      decoration: BoxDecoration(
-        color: cyanAccent.withOpacity(0.2),
-        borderRadius: BorderRadius.circular(6),
-        border: Border.all(color: cyanAccent, width: 1),
-      ),
-      child: Text(
-        'profile',
-        style: GoogleFonts.inter(
-          color: cyanAccent,
-          fontSize: 24,
-          fontWeight: FontWeight.bold,
-        ),
-      ),
-    );
-  }
+
 
   Widget _buildUserCard() {
     return Container(

@@ -22,6 +22,21 @@ class _SettingsPageState extends State<SettingsPage> {
   bool isTiktokBlocked = true;
   bool isYoutubeBlocked = true;
 
+  int get activeBlockCount {
+    int count = 0;
+    if (isFbBlocked) count++;
+    if (isIgBlocked) count++;
+    if (isTiktokBlocked) count++;
+    if (isYoutubeBlocked) count++;
+    return count;
+  }
+
+  int startTimeValue = 4;
+  String startAmPm = 'PM';
+
+  int endTimeValue = 12;
+  String endAmPm = 'PM';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -97,15 +112,23 @@ class _SettingsPageState extends State<SettingsPage> {
             ],
           ),
           const SizedBox(height: 20),
-          _buildTimeInput('Start time', '16:00 PM'),
+          _buildTimeInput('Start time', startTimeValue, startAmPm, (val) {
+            setState(() => startTimeValue = val!);
+          }, (val) {
+            setState(() => startAmPm = val!);
+          }),
           const SizedBox(height: 15),
-          _buildTimeInput('End time', '00:00 PM'),
+          _buildTimeInput('End time', endTimeValue, endAmPm, (val) {
+            setState(() => endTimeValue = val!);
+          }, (val) {
+            setState(() => endAmPm = val!);
+          }),
         ],
       ),
     );
   }
 
-  Widget _buildTimeInput(String label, String time) {
+  Widget _buildTimeInput(String label, int timeValue, String amPm, Function(int?) onTimeChanged, Function(String?) onAmPmChanged) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -113,14 +136,43 @@ class _SettingsPageState extends State<SettingsPage> {
         const SizedBox(height: 8),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 12),
+          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
           decoration: BoxDecoration(
             color: const Color(0xFF1A2039),
             borderRadius: BorderRadius.circular(10),
           ),
-          child: Text(
-            time,
-            style: GoogleFonts.orbitron(color: Colors.white70, fontSize: 14),
+          child: Row(
+            children: [
+              Expanded(
+                child: DropdownButtonHideUnderline(
+                  child: DropdownButton<int>(
+                    value: timeValue,
+                    dropdownColor: const Color(0xFF13172B),
+                    style: GoogleFonts.orbitron(color: Colors.white, fontSize: 14),
+                    items: List.generate(12, (index) {
+                      return DropdownMenuItem(
+                        value: index + 1,
+                        child: Text('${index + 1}:00'),
+                      );
+                    }),
+                    onChanged: onTimeChanged,
+                  ),
+                ),
+              ),
+              const SizedBox(width: 15),
+              DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  value: amPm,
+                  dropdownColor: const Color(0xFF13172B),
+                  style: GoogleFonts.orbitron(color: Colors.white, fontSize: 14),
+                  items: const [
+                    DropdownMenuItem(value: 'AM', child: Text('AM')),
+                    DropdownMenuItem(value: 'PM', child: Text('PM')),
+                  ],
+                  onChanged: onAmPmChanged,
+                ),
+              ),
+            ],
           ),
         ),
       ],
@@ -139,7 +191,7 @@ class _SettingsPageState extends State<SettingsPage> {
               style: GoogleFonts.orbitron(color: Colors.white, fontSize: 18),
             ),
             Text(
-              '2/4 Block',
+              '$activeBlockCount/4 Block',
               style: GoogleFonts.orbitron(color: cyanAccent, fontSize: 14),
             ),
           ],
@@ -217,13 +269,16 @@ class _SettingsPageState extends State<SettingsPage> {
     );
   }
 
-  // 4. ปุ่ม Save
   Widget _buildSaveButton() {
     return SizedBox(
       width: double.infinity,
       height: 55,
       child: ElevatedButton(
-        onPressed: () => print('Settings Saved!'),
+        onPressed: () {
+          print('Start Time: ${startTimeValue.toString().padLeft(2, '0')}:00 $startAmPm');
+          print('End Time: ${endTimeValue.toString().padLeft(2, '0')}:00 $endAmPm');
+          print('Settings Saved!');
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF00D4FF),
           shape: RoundedRectangleBorder(

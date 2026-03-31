@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:firebase_core/firebase_core.dart';
+import 'package:provider/provider.dart';
+import 'WorkoutProvider.dart';
 import 'AuthWrapper.dart';
 import 'RegisterPage.dart';
 import 'DashboardPage.dart';
@@ -8,7 +10,14 @@ import 'CompletedPage.dart';
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
-  runApp(const AriseApp());
+  runApp(
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(create: (_) => WorkoutProvider()),
+      ],
+      child: const AriseApp(),
+    ),
+  );
 }
 
 class AriseApp extends StatelessWidget {

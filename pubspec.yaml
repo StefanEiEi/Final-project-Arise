@@ -22,12 +22,13 @@ dependencies:
   google_sign_in: ^6.2.1
 
   # Utilities & UI
-  shared_preferences: ^2.2.3
+  shared_preferences: ^2.5.5
   google_fonts: ^6.2.1
   percent_indicator: ^4.2.3
   font_awesome_flutter: ^10.7.0
   flutter_background_service: ^5.0.7
   smooth_page_indicator: ^1.1.0
+  provider: ^6.1.5+1
 
 dev_dependencies:
   flutter_test:

@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'WorkoutProvider.dart';
+import 'CompletedPage.dart';
 import 'QuestData.dart';
 
 class RestPage extends StatefulWidget {
@@ -31,12 +34,30 @@ class _RestPageState extends State<RestPage> {
     super.dispose();
   }
 
+  void _finishRest() {
+    _timer?.cancel();
+    final workoutProvider = Provider.of<WorkoutProvider>(context, listen: false);
+
+    if (workoutProvider.questStatus.every((status) => status == true)) {
+      Navigator.pushReplacement(
+        context,
+        MaterialPageRoute(builder: (context) => const CompletedPage()),
+      );
+    } else {
+      Navigator.pushAndRemoveUntil(
+        context,
+        MaterialPageRoute(builder: (context) => const SelectQuestPage()),
+        (route) => route.settings.name == '/dashboard' || route.isFirst,
+      );
+    }
+  }
+
   void _startTimer() {
     _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
       if (timeLeft > 0) {
         setState(() => timeLeft--);
       } else {
-        _timer?.cancel();
+        _finishRest();
       }
     });
   }
@@ -92,15 +113,7 @@ class _RestPageState extends State<RestPage> {
                   width: MediaQuery.of(context).size.width * 0.7,
                   height: 55,
                   child: ElevatedButton(
-                    onPressed: () {
-                      _timer?.cancel();
-                      // ⚡ วนลูปกลับไปหน้า Quest และส่งค่าเซ็ตใหม่ไป
-                      Navigator.pushAndRemoveUntil(
-                        context,
-                        MaterialPageRoute(builder: (context) => SelectQuestPage(currentSet: widget.currentSet + 1)),
-                        (route) => route.isFirst,
-                      );
-                    },
+                    onPressed: _finishRest,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,

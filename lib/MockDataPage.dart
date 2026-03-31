@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:provider/provider.dart';
+import 'WorkoutProvider.dart';
 import 'RestPage.dart';
-
 class MockDataPage extends StatefulWidget {
   final int currentSet;
   const MockDataPage({super.key, required this.currentSet});
@@ -54,6 +55,16 @@ class _MockDataPageState extends State<MockDataPage> {
               width: 250, height: 55,
               child: ElevatedButton(
                 onPressed: () {
+                  String workoutType = 'PUSH-UP';
+                  if (widget.currentSet == 2) workoutType = 'SQUAT';
+                  if (widget.currentSet == 3) workoutType = 'SIT-UP';
+
+                  context.read<WorkoutProvider>().completeWorkout(
+                    widget.currentSet - 1,
+                    workoutType,
+                    repsDone,
+                  );
+
                   Navigator.push(context, MaterialPageRoute(
                     builder: (context) => RestPage(currentSet: widget.currentSet),
                   ));
