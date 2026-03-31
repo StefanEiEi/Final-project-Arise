@@ -67,7 +67,7 @@ class _SettingsPageState extends State<SettingsPage> {
               color: cyanAccent,
               fontSize: 24,
               fontWeight: FontWeight.bold,
-            ),
+          ),
           ),
           const SizedBox(width: 48), // ล็อกระยะให้ Title อยู่ตรงกลาง
         ],

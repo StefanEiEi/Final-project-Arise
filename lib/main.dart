@@ -3,7 +3,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'AuthWrapper.dart';
 import 'RegisterPage.dart';
 import 'DashboardPage.dart';
-import 'LoginPage.dart';
+import 'CompletedPage.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -20,13 +20,13 @@ class AriseApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'ARISE!',
       theme: ThemeData(brightness: Brightness.dark),
-      // home: const LoginPage(),
-      home: const AuthWrapper(),
+      home: const CompletedPage(),
+      // home: const AuthWrapper(),
 
-      routes: {
-        '/registration': (context) => const RegisterPage(),
-        '/dashboard': (context) => const DashboardPage(),
-      },
+      // routes: {
+      //   '/registration': (context) => const RegisterPage(),
+      //   '/dashboard': (context) => const DashboardPage(),
+      // },
     );
   }
 }

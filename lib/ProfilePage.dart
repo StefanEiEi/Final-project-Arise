@@ -184,7 +184,7 @@ class _ProfilePageState extends State<ProfilePage> {
         'profile',
         style: GoogleFonts.inter(
           color: cyanAccent,
-          fontSize: 12,
+          fontSize: 24,
           fontWeight: FontWeight.bold,
         ),
       ),
