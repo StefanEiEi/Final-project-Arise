@@ -1,18 +1,31 @@
-# 🛡️ ARISE! Progress Report (01/04/2026)
+🛡️ ARISE! Progress Report (01/04/2026)
+All Update UI Page Completed
+- Login
+- Register
+- Dashboard
+- Profile
+- Setting
+- Select quest page
+- Calibration
+- Mock data
+- Rest page
+- Completed page
 
-### 1. ระบบจัดการสถานะ
-Provider Integration: ใช้ WorkoutProvider เป็นศูนย์กลางคุมสถานะ Quest และ EXP ทั้งแอป ข้อมูลไม่หายเวลาสลับหน้า
-MultiProvider: วางโครงสร้างใน main.dart พร้อมขยายระบบต่อได้
+DataService
+- มี SharedPreferences เก็บสถานะภารกิจรายวัน (Quest Status) และการตั้งค่าในเครื่อง
+- มี Firebase Firestore เก็บข้อมูลโปรไฟล์ และคะแนน EXP สะสมรวมของกล้ามเนื้อ 5 ส่วน (Chest, Shoulder, Biceps, Abs, Legs)
 
-### 2. ลอจิกการทำงาน
-Workout Loop: Select Quest -> Calibration -> Mock Data -> Rest (1:30 min) -> วนกลับหน้าเลือกท่าอัตโนมัติ
-Smart Navigation: หากทำครบ 3 ท่า ระบบจะดีดจากหน้า Rest เข้าสู่หน้า CompletedPage ทันทีไม่ต้องกดซ้ำ
-Button Logic: ปุ่มท่าที่ทำเสร็จจะถูกล็อก เป็นสีฟ้า และปุ่มภารกิจจะล็อกเป็นสีเขียวเมื่อจบ 3 ท่า
+Logic workout flow
+- สร้าง Flow การออกกำลังกาย: Select Quest >> Calibration >> Mock Data >> Rest
+- ระบบเช็กเงื่อนไขการทำครบทุกท่า: เมื่อครบ 3 ท่าจะส่งไปหน้า Completed อัตโนมัติ
+- ปรับปรุง Navigation: แก้ปัญหาหน้าจอมืด (Black Screen) โดยการใช้ popUntil กลับสู่หน้าแรกสุด
 
-### 3. UI
-Settings Page: ปรับระบบกรอกเวลาเป็น 12-hour (AM/PM) และตัวนับ App Block แบบ Dynamic ตามการใช้งานจริง
-Header Sync: ปรับหน้า Profile ให้คลีนและเข้าชุดกับหน้า Settings (ใช้ฟอนต์ Orbitron)
+ฟีเจอร์หน้า Profile & Dashboard
+- เลือกรูปโปรไฟล์จาก Gallery ในเครื่องได้
+- แสดงชื่อผู้เล่นตรง card ในหน้า Dashboard (พร้อมคำนำหน้า Hunter)
+- ดึงข้อมูลส่วนตัวมาแสดงและแก้ไขได้ (น้ำหนัก, ส่วนสูง, เพศ)
 
-### 4. สถานะปัจจุบัน
-UI: เสร็จสมบูรณ์ตามแผน 
-Database: โครงสร้าง Firebase พร้อมเชื่อมต่อกับ EXP สะสมใน Provider ต่อไป
+งานในอนาคต
+- Camera UI
+- Ai Pose Detection (ML Kit)
+- Counting Reps with Ai

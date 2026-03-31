@@ -1,8 +1,7 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'WorkoutProvider.dart';
+import 'services/DataService.dart';
 import 'CompletedPage.dart';
 import 'QuestData.dart';
 
@@ -36,9 +35,8 @@ class _RestPageState extends State<RestPage> {
 
   void _finishRest() {
     _timer?.cancel();
-    final workoutProvider = Provider.of<WorkoutProvider>(context, listen: false);
-
-    if (workoutProvider.questStatus.every((status) => status == true)) {
+    
+    if (DataService.instance.questStatus.every((status) => status == true)) {
       Navigator.pushReplacement(
         context,
         MaterialPageRoute(builder: (context) => const CompletedPage()),
@@ -101,7 +99,6 @@ class _RestPageState extends State<RestPage> {
                       const SizedBox(height: 15),
                       Text('PUSH-UP', style: GoogleFonts.orbitron(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
                       const SizedBox(height: 15),
-                      // ⚡ โชว์ข้อความบอกว่ากำลังจะไปเซ็ตต่อไป
                       Text('Upcoming: Set ${widget.currentSet + 1} of 3', style: GoogleFonts.orbitron(color: Colors.white70, fontSize: 14)),
                       const SizedBox(height: 8),
                       Text('Target: 15 Reps', style: GoogleFonts.orbitron(color: Colors.white70, fontSize: 14)),

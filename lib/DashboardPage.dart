@@ -6,13 +6,20 @@ import 'Muscle.dart';
 import 'SettingsPage.dart';
 import 'ProfilePage.dart';
 import 'QuestData.dart';
+import 'services/DataService.dart';
+import 'dart:io';
 
-class DashboardPage extends StatelessWidget {
+class DashboardPage extends StatefulWidget {
   const DashboardPage({super.key});
 
   @override
+  State<DashboardPage> createState() => _DashboardPageState();
+}
+
+class _DashboardPageState extends State<DashboardPage> {
+  @override
   Widget build(BuildContext context) {
-    // ข้อมูลจำลอง (เดี๋ยวฟานค่อยดึงจาก Firebase/Provider มาใส่ตรงนี้)
+    // ข้อมูลจำลอง
     final int userLevel = 1;
     final int userExp = 45;
     final List<Muscle> muscles = [
@@ -24,16 +31,15 @@ class DashboardPage extends StatelessWidget {
     ];
 
     return Scaffold(
-      //0A101C
       backgroundColor: const Color(0xFF0A101C),
       body: SafeArea(
         child: SingleChildScrollView(
           padding: const EdgeInsets.symmetric(vertical: 20),
           child: Column(
             children: [
-              _buildHeader(context), // ส่ง context
+              _buildHeader(context), 
               const SizedBox(height: 20),
-              _buildProfileCard(context, userLevel, userExp), // ส่ง context
+              _buildProfileCard(context, userLevel, userExp), 
               const SizedBox(height: 30),
               _buildBodyMap(muscles),
               const SizedBox(height: 20),
@@ -82,18 +88,26 @@ class DashboardPage extends StatelessWidget {
             // รวมไอคอนปุ่มกดไว้ด้วยกัน
             children: [
               GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const ProfilePage()),
-                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const ProfilePage(),
+                    ),
+                  ).then((_) => setState(() {}));
+                },
                 child: const Icon(Icons.person, color: Colors.cyan, size: 28),
               ),
               const SizedBox(width: 10),
               GestureDetector(
-                onTap: () => Navigator.push(
-                  context,
-                  MaterialPageRoute(builder: (context) => const SettingsPage()),
-                ),
+                onTap: () {
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => const SettingsPage(),
+                    ),
+                  ).then((_) => setState(() {}));
+                },
                 child: const Icon(Icons.settings, color: Colors.cyan, size: 28),
               ),
             ],
@@ -121,11 +135,14 @@ class DashboardPage extends StatelessWidget {
   }
 
   Widget _buildProfileCard(BuildContext context, int level, int exp) {
+    final ds = DataService.instance;
     return GestureDetector(
-      onTap: () => Navigator.push(
-        context,
-        MaterialPageRoute(builder: (context) => const ProfilePage()),
-      ),
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(builder: (context) => const ProfilePage()),
+        ).then((_) => setState(() {}));
+      },
       child: Container(
         width: 350,
         padding: const EdgeInsets.all(20),
@@ -135,15 +152,42 @@ class DashboardPage extends StatelessWidget {
         ),
         child: Row(
           children: [
-            Image.asset('assets/images/logo.png', width: 80),
+            Container(
+              width: 80,
+              height: 80,
+              decoration: BoxDecoration(
+                shape: BoxShape.circle,
+                border: Border.all(color: const Color(0xFF39D2C0), width: 2),
+                image: ds.profileImagePath != null
+                    ? DecorationImage(
+                        image: FileImage(File(ds.profileImagePath!)),
+                        fit: BoxFit.cover,
+                      )
+                    : const DecorationImage(
+                        image: AssetImage('assets/images/logo.png'),
+                        fit: BoxFit.cover,
+                      ),
+              ),
+            ),
             const SizedBox(width: 15),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Hunter X',
-                    style: TextStyle(color: Colors.white, fontSize: 18),
+                  RichText(
+                    text: TextSpan(
+                      style: const TextStyle(fontSize: 18),
+                      children: [
+                        const TextSpan(
+                          text: 'Hunter ',
+                          style: TextStyle(color: Colors.white),
+                        ),
+                        TextSpan(
+                          text: ds.playerName, 
+                          style: const TextStyle(color: Color(0xFFFFD700)),
+                        ),
+                      ],
+                    ),
                   ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -209,7 +253,7 @@ class DashboardPage extends StatelessWidget {
       alignment: Alignment.center,
       children: [
         Image.asset(
-          'assets/images/Base_body.png',
+          'assets/images/New_Base_body.png',
           width: 300,
           fit: BoxFit.contain,
         ),
@@ -235,7 +279,7 @@ class DashboardPage extends StatelessWidget {
           Navigator.push(
             context,
             MaterialPageRoute(builder: (context) => const SelectQuestPage()),
-          );
+          ).then((_) => setState(() {}));
         }),
         const SizedBox(width: 20),
         _btn('REST', const Color(0xFF00FC97), () {
@@ -248,7 +292,7 @@ class DashboardPage extends StatelessWidget {
 
   Widget _btn(String label, Color color, VoidCallback onPressed) {
     return ElevatedButton(
-      onPressed: onPressed, // ใส่ onPressed
+      onPressed: onPressed, 
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
@@ -304,7 +348,7 @@ class DashboardPage extends StatelessWidget {
               child: LinearPercentIndicator(
                 lineHeight: 8,
                 percent:
-                    (m.level % 20) / 20, // ตัวอย่างการขึ้น Rank ทุกๆ 20 เลเวล
+                    (m.level % 20) / 20, // ขึ้น Rank ทุกๆ 20 เลเวล
                 progressColor: const Color(0xFF00FFFF),
                 backgroundColor: Colors.white10,
                 barRadius: const Radius.circular(4),

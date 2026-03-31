@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'WorkoutProvider.dart';
+import 'services/DataService.dart';
 import 'DashboardPage.dart';
 
 class CompletedPage extends StatelessWidget {
@@ -16,13 +15,13 @@ class CompletedPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final provider = context.watch<WorkoutProvider>();
+    final ds = DataService.instance;
     int totalExp =
-        provider.chestExp +
-        provider.shoulderExp +
-        provider.bicepsExp +
-        provider.absExp +
-        provider.legsExp;
+        ds.chestExp +
+        ds.shoulderExp +
+        ds.bicepsExp +
+        ds.absExp +
+        ds.legsExp;
     int currentLevel = 1 + (totalExp ~/ 100);
     double targetExpPercent = (totalExp % 100) / 100.0;
 
@@ -52,22 +51,22 @@ class CompletedPage extends StatelessWidget {
               ),
               const SizedBox(height: 30),
 
-              // 2. การ์ดสรุปตัวละคร (Hunter Summary)
-              _buildHunterCard(currentLevel, targetExpPercent),
+              // 2. Hunter Summary
+              _buildHunterCard(ds, currentLevel, targetExpPercent),
               const SizedBox(height: 20),
 
-              // 3. การ์ดอัปเดตสเตตัส (Status Update)
-              _buildStatusCard(context, provider),
+              // 3. Card Status Update
+              _buildStatusCard(context, ds),
               const SizedBox(height: 40),
 
-              // 4. ปุ่ม BACK 
+              // 4. Button BACK 
               SizedBox(
                 width: double.infinity,
                 height: 60,
                 child: ElevatedButton(
                   onPressed: () {
                     // ตรวจสอบว่าทำครบทุกอันแล้วหรือยัง
-                    bool isAllDone = provider.questStatus.every((status) => status);
+                    bool isAllDone = ds.questStatus.every((status) => status);
 
                     if (isAllDone) {
                       Navigator.pushAndRemoveUntil(
@@ -91,7 +90,7 @@ class CompletedPage extends StatelessWidget {
                     elevation: 5,
                   ),
                   child: Text(
-                    provider.questStatus.every((status) => status) ? 'FINISH WORKOUT' : 'BACK TO QUESTS',
+                    ds.questStatus.every((status) => status) ? 'FINISH WORKOUT' : 'BACK TO QUESTS',
                     style: GoogleFonts.orbitron(
                       fontSize: 20,
                       fontWeight: FontWeight.w800,
@@ -108,7 +107,7 @@ class CompletedPage extends StatelessWidget {
 
   // --- UI Components ---
 
-  Widget _buildHunterCard(int level, double targetExpPercent) {
+  Widget _buildHunterCard(DataService ds, int level, double targetExpPercent) {
     return Container(
       padding: const EdgeInsets.all(16),
       decoration: BoxDecoration(
@@ -132,7 +131,7 @@ class CompletedPage extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  'Hunter Affan',
+                  'Hunter ${ds.playerName}',
                   style: GoogleFonts.orbitron(
                     color: Colors.white,
                     fontSize: 18,
@@ -208,7 +207,7 @@ class CompletedPage extends StatelessWidget {
     );
   }
 
-  Widget _buildStatusCard(BuildContext context, WorkoutProvider provider) {
+  Widget _buildStatusCard(BuildContext context, DataService ds) {
     return Container(
       width: double.infinity,
       padding: const EdgeInsets.all(20),
@@ -230,33 +229,33 @@ class CompletedPage extends StatelessWidget {
           const SizedBox(height: 20),
           _statusRow(
             'Shoulder',
-            provider.shoulderExp,
-            provider.shoulderExp + 1,
-            (provider.shoulderExp % 10) / 10.0,
+            ds.shoulderExp,
+            ds.shoulderExp + 1,
+            (ds.shoulderExp % 10) / 10.0,
           ),
           _statusRow(
             'Biceps',
-            provider.bicepsExp,
-            provider.bicepsExp + 1,
-            (provider.bicepsExp % 10) / 10.0,
+            ds.bicepsExp,
+            ds.bicepsExp + 1,
+            (ds.bicepsExp % 10) / 10.0,
           ),
           _statusRow(
             'Breast',
-            provider.chestExp,
-            provider.chestExp + 1,
-            (provider.chestExp % 10) / 10.0,
+            ds.chestExp,
+            ds.chestExp + 1,
+            (ds.chestExp % 10) / 10.0,
           ),
           _statusRow(
             'Abs',
-            provider.absExp,
-            provider.absExp + 1,
-            (provider.absExp % 10) / 10.0,
+            ds.absExp,
+            ds.absExp + 1,
+            (ds.absExp % 10) / 10.0,
           ),
           _statusRow(
             'Leg',
-            provider.legsExp,
-            provider.legsExp + 1,
-            (provider.legsExp % 10) / 10.0,
+            ds.legsExp,
+            ds.legsExp + 1,
+            (ds.legsExp % 10) / 10.0,
           ),
         ],
       ),

@@ -1,7 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:provider/provider.dart';
-import 'WorkoutProvider.dart';
+import 'services/DataService.dart';
 import 'RestPage.dart';
 class MockDataPage extends StatefulWidget {
   final int currentSet;
@@ -12,7 +11,7 @@ class MockDataPage extends StatefulWidget {
 }
 
 class _MockDataPageState extends State<MockDataPage> {
-  int repsDone = 15; // ค่าจำลองเริ่มต้น
+  int repsDone = 15; // ค่าจำลอง
 
   @override
   Widget build(BuildContext context) {
@@ -26,7 +25,7 @@ class _MockDataPageState extends State<MockDataPage> {
               style: GoogleFonts.orbitron(color: Colors.cyanAccent, fontSize: 18, fontWeight: FontWeight.bold)),
             const SizedBox(height: 40),
             
-            // ตัวเลข Reps โฮโลแกรม
+            // ตัวเลข Reps 
             Text('$repsDone', 
               style: GoogleFonts.orbitron(
                 color: Colors.white, fontSize: 100, fontWeight: FontWeight.w900,
@@ -59,7 +58,7 @@ class _MockDataPageState extends State<MockDataPage> {
                   if (widget.currentSet == 2) workoutType = 'SQUAT';
                   if (widget.currentSet == 3) workoutType = 'SIT-UP';
 
-                  context.read<WorkoutProvider>().completeWorkout(
+                  DataService.instance.updateWorkout(
                     widget.currentSet - 1,
                     workoutType,
                     repsDone,

@@ -1,11 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
-import 'package:provider/provider.dart';
-import 'WorkoutProvider.dart';
-
+import 'services/DataService.dart';
 import 'CalibrationPage.dart';
-import 'DashboardPage.dart';
 
 class QuestData {
   final String title;
@@ -22,7 +19,7 @@ class QuestData {
 }
 
 class SelectQuestPage extends StatefulWidget {
-  final int currentSet; // ⚡ รับค่า currentSet
+  final int currentSet; //รับค่า currentSet
   const SelectQuestPage({super.key, this.currentSet = 1});
 
   @override
@@ -55,7 +52,7 @@ class _SelectQuestPageState extends State<SelectQuestPage> {
               ),
             ),
             Text(
-              'QUEST ${widget.currentSet} of 3', // ⚡ โชว์ตัวเลขเซ็ตปัจจุบัน
+              'QUEST ${widget.currentSet} of 3', //โชว์ตัวเลขเซ็ตปัจจุบัน
               style: GoogleFonts.inter(color: Colors.white70, fontSize: 14),
             ),
             const SizedBox(height: 10),
@@ -81,14 +78,14 @@ class _SelectQuestPageState extends State<SelectQuestPage> {
               ),
             ),
 
-            Consumer<WorkoutProvider>(
-              builder: (context, provider, child) {
+            Builder(
+              builder: (context) {
                 int currentIndex = _pageController.hasClients && _pageController.page != null
                     ? _pageController.page!.round()
                     : 0;
 
-                bool isCurrentQuestDone = provider.questStatus[currentIndex];
-                bool isAllDone = provider.questStatus.every((status) => status);
+                bool isCurrentQuestDone = DataService.instance.questStatus[currentIndex];
+                bool isAllDone = DataService.instance.questStatus.every((status) => status);
 
                 Color btnBgColor = Colors.white;
                 Color btnTextColor = Colors.black;
@@ -109,11 +106,13 @@ class _SelectQuestPageState extends State<SelectQuestPage> {
                     height: 55,
                     child: ElevatedButton(
                       onPressed: (isAllDone || isCurrentQuestDone) ? null : () {
-                        // we pass currentIndex + 1 as currentSet so other pages know which quest it is
+                        // ส่งค่า currentSet ไปหน้า CalibrationPage
                         Navigator.push(
                           context,
                           MaterialPageRoute(builder: (context) => CalibrationPage(currentSet: currentIndex + 1)),
-                        );
+                        ).then((_) {
+                          setState(() {});
+                        });
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: btnBgColor,

@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:flutter/services.dart'; // สำคัญสำหรับดักการพิมพ์เฉพาะตัวเลข
+import 'dart:io';
+import 'package:flutter/services.dart';
+import 'package:image_picker/image_picker.dart';
+import 'services/DataService.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({super.key});
@@ -15,18 +19,20 @@ class _ProfilePageState extends State<ProfilePage> {
   final Color cardBg = const Color(0xFF13172B);
   final Color inputBg = const Color(0xFF2B3359);
   final Color cyanAccent = const Color(0xFF00FFFF);
-  final Color pinkAccent = const Color(0xFFFF00C8); // สีของผู้หญิง
+  final Color pinkAccent = const Color(0xFFFF00C8); 
 
   // Controllers
   late TextEditingController nameController;
   late TextEditingController dobController;
   late TextEditingController weightController;
   late TextEditingController heightController;
+  late TextEditingController emailController;
+  File? _imageFile;
 
-  // ตัวแปรเก็บสถานะเพศ (เริ่มต้นเป็น Male)
+  // ตัวแปรเก็บสถานะเพศ 
   String selectedGender = 'Male';
 
-  // ฟังก์ชันสำหรับส่วนหัวที่มีปุ่มย้อนกลับ
+  // Header function
   Widget _buildHeader(BuildContext context) {
     return SizedBox(
       height: 70,
@@ -55,7 +61,7 @@ class _ProfilePageState extends State<ProfilePage> {
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(width: 48), // ล็อกระยะให้ Title อยู่ตรงกลาง
+          const SizedBox(width: 48),  
         ],
       ),
     );
@@ -64,10 +70,22 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   void initState() {
     super.initState();
-    nameController = TextEditingController(text: 'Affan');
-    dobController = TextEditingController(text: '07/03/2005');
-    weightController = TextEditingController(text: '90.00');
-    heightController = TextEditingController(text: '170.00');
+    final ds = DataService.instance;
+    nameController = TextEditingController(text: ds.playerName);
+    dobController = TextEditingController(text: ds.dob);
+    weightController = TextEditingController(
+      text: ds.weight.toStringAsFixed(2),
+    );
+    heightController = TextEditingController(
+      text: ds.height.toStringAsFixed(2),
+    );
+    selectedGender = ds.gender;
+    if (ds.profileImagePath != null) {
+      _imageFile = File(ds.profileImagePath!);
+    }
+
+    String email = FirebaseAuth.instance.currentUser?.email ?? 'No email';
+    emailController = TextEditingController(text: email);
   }
 
   @override
@@ -76,7 +94,18 @@ class _ProfilePageState extends State<ProfilePage> {
     dobController.dispose();
     weightController.dispose();
     heightController.dispose();
+    emailController.dispose();
     super.dispose();
+  }
+
+  Future<void> _pickImage() async {
+    final picker = ImagePicker();
+    final pickedFile = await picker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      setState(() {
+        _imageFile = File(pickedFile.path);
+      });
+    }
   }
 
   // ฟังก์ชันเรียกปฏิทิน
@@ -87,7 +116,6 @@ class _ProfilePageState extends State<ProfilePage> {
       firstDate: DateTime(1900),
       lastDate: DateTime.now(),
       builder: (context, child) {
-        // แต่งปฏิทินให้เข้าธีมมืด
         return Theme(
           data: Theme.of(context).copyWith(
             colorScheme: ColorScheme.dark(
@@ -122,8 +150,8 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                _buildHeader(context), // แก้ไขจาก _buildProfileTag() เป็นตัวนี้
-                const SizedBox(height: 5), // ปรับระยะห่างเล็กน้อย
+                _buildHeader(context), 
+                const SizedBox(height: 5), 
 
                 _buildUserCard(),
 
@@ -181,8 +209,6 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-
-
   Widget _buildUserCard() {
     return Container(
       padding: const EdgeInsets.all(16),
@@ -201,16 +227,20 @@ class _ProfilePageState extends State<ProfilePage> {
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
                   border: Border.all(color: const Color(0xFF39D2C0), width: 2),
-                  image: const DecorationImage(
-                    image: AssetImage('assets/images/logo.png'),
-                    fit: BoxFit.cover,
-                  ),
+                  image: _imageFile != null
+                      ? DecorationImage(
+                          image: FileImage(_imageFile!),
+                          fit: BoxFit.cover,
+                        )
+                      : const DecorationImage(
+                          image: AssetImage('assets/images/logo.png'),
+                          fit: BoxFit.cover,
+                        ),
                 ),
               ),
               // ปุ่มกดเปลี่ยนรูปโปรไฟล์
               GestureDetector(
-                onTap: () =>
-                    print('System: เปิด Image Picker เพื่อเลือกรูปใหม่...'),
+                onTap: _pickImage,
                 child: Container(
                   padding: const EdgeInsets.all(6),
                   decoration: const BoxDecoration(
@@ -227,7 +257,7 @@ class _ProfilePageState extends State<ProfilePage> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                'Affan',
+                nameController.text,
                 style: GoogleFonts.outfit(
                   color: Colors.white,
                   fontSize: 24,
@@ -236,7 +266,7 @@ class _ProfilePageState extends State<ProfilePage> {
               ),
               const SizedBox(height: 4),
               Text(
-                'fan@arise.com',
+                emailController.text,
                 style: GoogleFonts.plusJakartaSans(
                   color: Colors.white70,
                   fontSize: 14,
@@ -263,7 +293,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // อัปเกรด _buildInputField ให้รับค่า Numeric และ Tap ได้
+  // _buildInputField ให้รับค่าตัวเลข 
   Widget _buildInputField({
     required IconData icon,
     required String label,
@@ -329,7 +359,7 @@ class _ProfilePageState extends State<ProfilePage> {
     );
   }
 
-  // อัปเกรด Toggle Gender แบบมีเอฟเฟกต์เรืองแสง
+  // Toggle Gender แบบมีเอฟเฟกต์เรืองแสง
   Widget _buildGenderField() {
     return Container(
       margin: const EdgeInsets.only(bottom: 12),
@@ -389,9 +419,25 @@ class _ProfilePageState extends State<ProfilePage> {
     return Align(
       alignment: Alignment.centerRight,
       child: ElevatedButton(
-        onPressed: () => print(
-          'System: บันทึกข้อมูล ${nameController.text}, เพศ: $selectedGender, หนัก: ${weightController.text}',
-        ),
+        onPressed: () async {
+          final ds = DataService.instance;
+          try {
+            await ds.updateProfile(
+              pName: nameController.text,
+              pDob: dobController.text,
+              pGender: selectedGender,
+              pWeight: double.tryParse(weightController.text) ?? 70.0,
+              pHeight: double.tryParse(heightController.text) ?? 170.0,
+              pImagePath: _imageFile?.path,
+            );
+            if (mounted) {
+              // ใช้ route.isFirst เพื่อเลี่ยงหน้าจอสีดำที่เกิดจากการไม่มี named routes
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
+          } catch (e) {
+            debugPrint('Error updating profile: $e');
+          }
+        },
         style: ElevatedButton.styleFrom(
           backgroundColor: cyanAccent,
           foregroundColor: Colors.black,
@@ -417,7 +463,7 @@ class _ProfilePageState extends State<ProfilePage> {
     VoidCallback? onTap,
   }) {
     return InkWell(
-      onTap: onTap, // เพิ่ม onTap ตรงนี้
+      onTap: onTap, 
       borderRadius: BorderRadius.circular(12),
       child: Container(
         margin: const EdgeInsets.only(bottom: 12),

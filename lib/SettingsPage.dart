@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'services/DataService.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -36,6 +37,32 @@ class _SettingsPageState extends State<SettingsPage> {
 
   int endTimeValue = 12;
   String endAmPm = 'PM';
+
+  @override
+  void initState() {
+    super.initState();
+    final ds = DataService.instance;
+    
+    // Pull blocked apps boolean array: [Fb, Ig, Tiktok, Youtube]
+    isFbBlocked = ds.blockedApps[0];
+    isIgBlocked = ds.blockedApps[1];
+    isTiktokBlocked = ds.blockedApps[2];
+    isYoutubeBlocked = ds.blockedApps[3];
+
+    // Decode startTime structure "08:00 AM"
+    try {
+      var sParts = ds.startTime.split(' ');
+      startTimeValue = int.parse(sParts[0].split(':')[0]);
+      startAmPm = sParts[1];
+    } catch (_) {}
+
+    // Decode endTime structure "05:00 PM"
+    try {
+      var eParts = ds.endTime.split(' ');
+      endTimeValue = int.parse(eParts[0].split(':')[0]);
+      endAmPm = eParts[1];
+    } catch (_) {}
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +111,7 @@ class _SettingsPageState extends State<SettingsPage> {
               fontWeight: FontWeight.bold,
           ),
           ),
-          const SizedBox(width: 48), // ล็อกระยะให้ Title อยู่ตรงกลาง
+          const SizedBox(width: 48), 
         ],
       ),
     );
@@ -274,10 +301,20 @@ class _SettingsPageState extends State<SettingsPage> {
       width: double.infinity,
       height: 55,
       child: ElevatedButton(
-        onPressed: () {
-          print('Start Time: ${startTimeValue.toString().padLeft(2, '0')}:00 $startAmPm');
-          print('End Time: ${endTimeValue.toString().padLeft(2, '0')}:00 $endAmPm');
-          print('Settings Saved!');
+        onPressed: () async {
+          String sTime = '${startTimeValue.toString().padLeft(2, '0')}:00 $startAmPm';
+          String eTime = '${endTimeValue.toString().padLeft(2, '0')}:00 $endAmPm';
+          List<bool> bApps = [isFbBlocked, isIgBlocked, isTiktokBlocked, isYoutubeBlocked];
+          
+          try {
+            await DataService.instance.updateSettings(sTime, eTime, bApps);
+            debugPrint('Settings Saved locally!');
+            if (mounted) {
+              Navigator.popUntil(context, (route) => route.isFirst);
+            }
+          } catch (e) {
+            debugPrint('Error saving settings: $e');
+          }
         },
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF00D4FF),
