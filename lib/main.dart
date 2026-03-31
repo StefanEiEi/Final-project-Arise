@@ -20,13 +20,12 @@ class AriseApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'ARISE!',
       theme: ThemeData(brightness: Brightness.dark),
-      home: const CompletedPage(),
-      // home: const AuthWrapper(),
+      home: const AuthWrapper(),
 
-      // routes: {
-      //   '/registration': (context) => const RegisterPage(),
-      //   '/dashboard': (context) => const DashboardPage(),
-      // },
+      routes: {
+        '/registration': (context) => const RegisterPage(),
+        '/dashboard': (context) => const DashboardPage(),
+      },
     );
   }
 }
