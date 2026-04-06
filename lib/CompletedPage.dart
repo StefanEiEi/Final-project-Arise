@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'services/DataService.dart';
-import 'DashboardPage.dart';
+import 'page/dashboard/DashboardPage.dart';
 
 class CompletedPage extends StatelessWidget {
   const CompletedPage({super.key});
@@ -29,7 +30,7 @@ class CompletedPage extends StatelessWidget {
       backgroundColor: bgDark,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 24, vertical: 40),
+          padding: EdgeInsets.symmetric(horizontal: 24.w, vertical: 40.h),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -38,31 +39,31 @@ class CompletedPage extends StatelessWidget {
                 'QUEST COMPLETED',
                 style: GoogleFonts.orbitron(
                   color: successGreen,
-                  fontSize: 28,
+                  fontSize: 22.sp,
                   fontWeight: FontWeight.w700,
                   letterSpacing: 2.0,
                   shadows: [
                     Shadow(
                       color: successGreen.withOpacity(0.5),
-                      blurRadius: 10,
+                      blurRadius: 10.r,
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
 
               // 2. Hunter Summary
               _buildHunterCard(ds, currentLevel, targetExpPercent),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
 
               // 3. Card Status Update
               _buildStatusCard(context, ds),
-              const SizedBox(height: 40),
+              SizedBox(height: 40.h),
 
               // 4. Button BACK 
               SizedBox(
-                width: double.infinity,
-                height: 60,
+                width: 320.w,
+                height: 60.h,
                 child: ElevatedButton(
                   onPressed: () {
                     // ตรวจสอบว่าทำครบทุกอันแล้วหรือยัง
@@ -85,15 +86,18 @@ class CompletedPage extends StatelessWidget {
                     backgroundColor: cyanAccent,
                     foregroundColor: const Color(0xFF0A0E1A),
                     shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(12.r),
                     ),
                     elevation: 5,
                   ),
-                  child: Text(
-                    ds.questStatus.every((status) => status) ? 'FINISH WORKOUT' : 'BACK TO QUESTS',
-                    style: GoogleFonts.orbitron(
-                      fontSize: 20,
-                      fontWeight: FontWeight.w800,
+                  child: FittedBox(
+                    fit: BoxFit.scaleDown,
+                    child: Text(
+                      ds.questStatus.every((status) => status) ? 'FINISH WORKOUT' : 'BACK TO QUESTS',
+                      style: GoogleFonts.orbitron(
+                        fontSize: 20.sp,
+                        fontWeight: FontWeight.w800,
+                      ),
                     ),
                   ),
                 ),
@@ -109,23 +113,23 @@ class CompletedPage extends StatelessWidget {
 
   Widget _buildHunterCard(DataService ds, int level, double targetExpPercent) {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(16),
+        borderRadius: BorderRadius.circular(16.r),
       ),
       child: Row(
         children: [
           ClipRRect(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
             child: Image.asset(
               'assets/images/logo.png',
-              width: 85,
-              height: 85,
+              width: 85.w,
+              height: 85.h,
               fit: BoxFit.cover,
             ),
           ),
-          const SizedBox(width: 16),
+          SizedBox(width: 16.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,43 +138,43 @@ class CompletedPage extends StatelessWidget {
                   'Hunter ${ds.playerName}',
                   style: GoogleFonts.orbitron(
                     color: Colors.white,
-                    fontSize: 18,
+                    fontSize: 18.sp,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
-                const SizedBox(height: 5),
+                SizedBox(height: 5.h),
                 Row(
                   children: [
                     Text(
                       'LEVEL $level',
                       style: GoogleFonts.orbitron(
                         color: const Color(0xFF8899AA),
-                        fontSize: 13,
+                        fontSize: 13.sp,
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    SizedBox(width: 10.w),
                     Container(
-                      padding: const EdgeInsets.symmetric(
-                        horizontal: 8,
-                        vertical: 2,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.w,
+                        vertical: 2.h,
                       ),
                       decoration: BoxDecoration(
                         color: const Color(0xFFB8860B).withOpacity(0.3),
-                        borderRadius: BorderRadius.circular(5),
+                        borderRadius: BorderRadius.circular(5.r),
                       ),
                       child: Text(
                         'RANK E',
                         style: GoogleFonts.orbitron(
                           color: rankGold,
-                          fontSize: 12,
+                          fontSize: 12.sp,
                           fontWeight: FontWeight.w800,
                         ),
                       ),
                     ),
                   ],
                 ),
-                const SizedBox(height: 10),
+                SizedBox(height: 10.h),
                 // EXP Bar Animation
                 TweenAnimationBuilder<double>(
                   tween: Tween<double>(begin: 0.0, end: targetExpPercent),
@@ -184,15 +188,15 @@ class CompletedPage extends StatelessWidget {
                           value: value,
                           backgroundColor: Colors.white10,
                           color: cyanAccent,
-                          minHeight: 8,
-                          borderRadius: BorderRadius.circular(8),
+                          minHeight: 8.h,
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
-                        const SizedBox(height: 4),
+                        SizedBox(height: 4.h),
                         Text(
                           '${(value * 100).toInt()}/100 EXP',
                           style: GoogleFonts.orbitron(
                             color: cyanAccent,
-                            fontSize: 10,
+                            fontSize: 10.sp,
                           ),
                         ),
                       ],
@@ -210,11 +214,11 @@ class CompletedPage extends StatelessWidget {
   Widget _buildStatusCard(BuildContext context, DataService ds) {
     return Container(
       width: double.infinity,
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(16),
-        border: Border.all(color: cyanAccent.withOpacity(0.3), width: 1),
+        borderRadius: BorderRadius.circular(16.r),
+        border: Border.all(color: cyanAccent.withOpacity(0.3), width: 1.w),
       ),
       child: Column(
         children: [
@@ -222,11 +226,11 @@ class CompletedPage extends StatelessWidget {
             'STATUS UPDATE',
             style: GoogleFonts.orbitron(
               color: cyanAccent,
-              fontSize: 18,
+              fontSize: 18.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20.h),
           _statusRow(
             'Shoulder',
             ds.shoulderExp,
@@ -264,7 +268,7 @@ class CompletedPage extends StatelessWidget {
 
   Widget _statusRow(String label, int current, int next, double progress) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 10.h),
       child: Column(
         children: [
           Row(
@@ -274,23 +278,23 @@ class CompletedPage extends StatelessWidget {
                 label,
                 style: GoogleFonts.inter(
                   color: cyanAccent,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
               Text(
                 '$current -> $next',
-                style: GoogleFonts.orbitron(color: Colors.white, fontSize: 12),
+                style: GoogleFonts.orbitron(color: Colors.white, fontSize: 12.sp),
               ),
             ],
           ),
-          const SizedBox(height: 6),
+          SizedBox(height: 6.h),
           LinearProgressIndicator(
             value: progress,
             backgroundColor: const Color(0xFF1E2A3A),
             color: cyanAccent,
-            minHeight: 10,
-            borderRadius: BorderRadius.circular(10),
+            minHeight: 10.h,
+            borderRadius: BorderRadius.circular(10.r),
           ),
         ],
       ),

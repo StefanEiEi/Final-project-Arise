@@ -8,8 +8,8 @@ plugins {
 
 android {
     namespace = "com.example.project_arise"
-    compileSdk = flutter.compileSdkVersion
-    ndkVersion = flutter.ndkVersion
+    compileSdk = 36
+    ndkVersion = "27.0.12077973"
 
     compileOptions {
         sourceCompatibility = JavaVersion.VERSION_17
@@ -25,8 +25,9 @@ android {
         applicationId = "com.example.project_arise"
         // You can update the following values to match your application needs.
         // For more information, see: https://flutter.dev/to/review-gradle-config.
+        missingDimensionStrategy("default", "production")
         minSdk = 29
-        targetSdk = flutter.targetSdkVersion
+        targetSdk = 34
         versionCode = flutter.versionCode
         versionName = flutter.versionName
     }
@@ -47,4 +48,5 @@ flutter {
 dependencies {
   implementation(platform("com.google.firebase:firebase-bom:33.0.0"))
   implementation("com.google.firebase:firebase-analytics")
+  implementation("com.google.firebase:firebase-appdistribution:16.0.0-beta12")
 }

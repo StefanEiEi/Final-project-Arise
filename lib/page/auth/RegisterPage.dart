@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../dashboard/DashboardPage.dart';
 
 class RegisterPage extends StatefulWidget {
   const RegisterPage({super.key});
@@ -19,19 +21,36 @@ class _RegisterPageState extends State<RegisterPage> {
 
   // ฟังก์ชันบันทึกข้อมูลลง Cloud Firestore
   Future<void> _startAssessment() async {
-    final user = FirebaseAuth.instance.currentUser;
-    if (user != null) {
-      await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
-        'displayName': _nameController.text.trim(),
-        'weight': double.tryParse(_weightController.text) ?? 0,
-        'height': double.tryParse(_heightController.text) ?? 0,
-        'gender': _selectedGender,
-        'level': 1,
-        'updatedAt': FieldValue.serverTimestamp(),
-      }, SetOptions(merge: true));
-      print("บันทึกข้อมูลเรียบร้อย เตรียมทดสอบสมรรถภาพ");
+    try {
+      final user = FirebaseAuth.instance.currentUser;
+      if (user != null) {
+        await FirebaseFirestore.instance.collection('users').doc(user.uid).set({
+          'displayName': _nameController.text.trim(),
+          'weight': double.tryParse(_weightController.text) ?? 0,
+          'height': double.tryParse(_heightController.text) ?? 0,
+          'gender': _selectedGender,
+          'level': 1,
+          'updatedAt': FieldValue.serverTimestamp(),
+        }, SetOptions(merge: true));
+        print("บันทึกข้อมูลเรียบร้อย เตรียมทดสอบสมรรถภาพ");
+        if (mounted) {
+          Navigator.pushReplacement(
+            context,
+            MaterialPageRoute(builder: (context) => const DashboardPage()),
+          );
+        }
+      } else {
+        if (mounted) {
+          ScaffoldMessenger.of(
+            context,
+          ).showSnackBar(const SnackBar(content: Text('No user logged in.')));
+        }
+      }
+    } catch (e) {
       if (mounted) {
-        Navigator.pushNamed(context, '/calibration');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text('An error occurred: ${e.toString()}')),
+        );
       }
     }
   }
@@ -51,19 +70,19 @@ class _RegisterPageState extends State<RegisterPage> {
                 width: MediaQuery.of(context).size.width * 0.70,
                 child: Column(
                   children: [
-                    const Text(
+                    Text(
                       'PLAYER STATUS',
                       style: TextStyle(
                         fontFamily: 'Orbitron',
-                        fontSize: 24,
+                        fontSize: 24.sp,
                         color: Colors.cyanAccent,
                         fontWeight: FontWeight.bold,
                         shadows: [
-                          Shadow(color: Colors.cyanAccent, blurRadius: 15),
+                          Shadow(color: Colors.cyanAccent, blurRadius: 15.r),
                         ],
                       ),
                     ),
-                    const SizedBox(height: 10),
+                    SizedBox(height: 10.h),
                     const Text(
                       'LEVEL 1',
                       style: TextStyle(
@@ -71,14 +90,14 @@ class _RegisterPageState extends State<RegisterPage> {
                         color: Colors.white70,
                       ),
                     ),
-                    const SizedBox(height: 30),
+                    SizedBox(height: 30.h),
 
                     _buildTextField(
                       _nameController,
                       'Player Name',
                       Icons.person,
                     ),
-                    const SizedBox(height: 15),
+                    SizedBox(height: 15.h),
 
                     _buildTextField(
                       _weightController,
@@ -86,7 +105,7 @@ class _RegisterPageState extends State<RegisterPage> {
                       FontAwesomeIcons.weightScale,
                       isNumber: true,
                     ),
-                    const SizedBox(height: 15),
+                    SizedBox(height: 15.h),
 
                     _buildTextField(
                       _heightController,
@@ -94,18 +113,18 @@ class _RegisterPageState extends State<RegisterPage> {
                       Icons.height,
                       isNumber: true,
                     ),
-                    const SizedBox(height: 25),
+                    SizedBox(height: 25.h),
 
                     // Gender
                     Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         _genderIcon(Icons.male, 'Male', Colors.blueAccent),
-                        const SizedBox(width: 30),
+                        SizedBox(width: 30.w),
                         _genderIcon(Icons.female, 'Female', Colors.pinkAccent),
                       ],
                     ),
-                    const SizedBox(height: 40),
+                    SizedBox(height: 40.h),
 
                     //Start Assessment
                     ElevatedButton(
@@ -113,12 +132,12 @@ class _RegisterPageState extends State<RegisterPage> {
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.cyanAccent,
                         foregroundColor: Colors.black,
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 40,
-                          vertical: 15,
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 40.w,
+                          vertical: 15.h,
                         ),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(8),
+                          borderRadius: BorderRadius.circular(8.r),
                         ),
                       ),
                       child: const Text(
@@ -149,24 +168,24 @@ class _RegisterPageState extends State<RegisterPage> {
     return TextField(
       controller: controller,
       keyboardType: isNumber ? TextInputType.number : TextInputType.text,
-      style: const TextStyle(
+      style: TextStyle(
         color: Colors.white,
         fontFamily: 'Orbitron',
-        fontSize: 14,
+        fontSize: 14.sp,
       ),
       decoration: InputDecoration(
         hintText: hint,
         hintStyle: const TextStyle(color: Colors.white38),
-        prefixIcon: Icon(icon, color: Colors.cyanAccent, size: 20),
+        prefixIcon: Icon(icon, color: Colors.cyanAccent, size: 20.sp),
         filled: true,
         fillColor: const Color(0xFF13172B).withOpacity(0.8),
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
           borderSide: BorderSide.none,
         ),
         focusedBorder: OutlineInputBorder(
           borderSide: const BorderSide(color: Colors.cyanAccent),
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.circular(10.r),
         ),
       ),
     );
@@ -183,14 +202,14 @@ class _RegisterPageState extends State<RegisterPage> {
           children: [
             Icon(
               icon,
-              size: 50,
+              size: 50.sp,
               color: isSelected ? activeColor : Colors.white,
             ),
             Text(
               gender,
               style: TextStyle(
                 color: isSelected ? activeColor : Colors.white,
-                fontSize: 12,
+                fontSize: 12.sp,
               ),
             ),
           ],

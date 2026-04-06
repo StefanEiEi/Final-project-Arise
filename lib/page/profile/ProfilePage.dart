@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:image_picker/image_picker.dart';
-import 'services/DataService.dart';
+import '../../services/DataService.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 class ProfilePage extends StatefulWidget {
@@ -35,15 +36,15 @@ class _ProfilePageState extends State<ProfilePage> {
   // Header function
   Widget _buildHeader(BuildContext context) {
     return SizedBox(
-      height: 70,
+      height: 70.h,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: 24,
+              size: 24.sp,
             ),
             onPressed: () {
               if (Navigator.canPop(context)) {
@@ -57,11 +58,11 @@ class _ProfilePageState extends State<ProfilePage> {
             'PROFILE',
             style: GoogleFonts.orbitron(
               color: cyanAccent,
-              fontSize: 24,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
-          const SizedBox(width: 48),  
+          SizedBox(width: 48.w),  
         ],
       ),
     );
@@ -146,12 +147,12 @@ class _ProfilePageState extends State<ProfilePage> {
         backgroundColor: bgDark,
         body: SafeArea(
           child: SingleChildScrollView(
-            padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+            padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 10.h),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 _buildHeader(context), 
-                const SizedBox(height: 5), 
+                SizedBox(height: 5.h), 
 
                 _buildUserCard(),
 
@@ -185,7 +186,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   isNumeric: true,
                 ),
 
-                const SizedBox(height: 15),
+                SizedBox(height: 15.h),
                 _buildSaveButton(),
 
                 _buildSectionTitle('General'),
@@ -200,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                   isDestructive: true,
                   onTap: () => print('System: ออกจากระบบ Log Out!'),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
               ],
             ),
           ),
@@ -211,10 +212,10 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildUserCard() {
     return Container(
-      padding: const EdgeInsets.all(16),
+      padding: EdgeInsets.all(16.w),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Row(
         children: [
@@ -222,11 +223,11 @@ class _ProfilePageState extends State<ProfilePage> {
             alignment: Alignment.bottomRight,
             children: [
               Container(
-                width: 80,
-                height: 80,
+                width: 80.w,
+                height: 80.h,
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  border: Border.all(color: const Color(0xFF39D2C0), width: 2),
+                  border: Border.all(color: const Color(0xFF39D2C0), width: 2.w),
                   image: _imageFile != null
                       ? DecorationImage(
                           image: FileImage(_imageFile!),
@@ -242,17 +243,17 @@ class _ProfilePageState extends State<ProfilePage> {
               GestureDetector(
                 onTap: _pickImage,
                 child: Container(
-                  padding: const EdgeInsets.all(6),
+                  padding: EdgeInsets.all(6.w),
                   decoration: const BoxDecoration(
                     color: Color(0xFF39D2C0),
                     shape: BoxShape.circle,
                   ),
-                  child: const Icon(Icons.edit, color: Colors.white, size: 14),
+                  child: Icon(Icons.edit, color: Colors.white, size: 14.sp),
                 ),
               ),
             ],
           ),
-          const SizedBox(width: 20),
+          SizedBox(width: 20.w),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
@@ -260,16 +261,16 @@ class _ProfilePageState extends State<ProfilePage> {
                 nameController.text,
                 style: GoogleFonts.outfit(
                   color: Colors.white,
-                  fontSize: 24,
+                  fontSize: 24.sp,
                   fontWeight: FontWeight.bold,
                 ),
               ),
-              const SizedBox(height: 4),
+              SizedBox(height: 4.h),
               Text(
                 emailController.text,
                 style: GoogleFonts.plusJakartaSans(
                   color: Colors.white70,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                 ),
               ),
             ],
@@ -281,12 +282,12 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Widget _buildSectionTitle(String title) {
     return Padding(
-      padding: const EdgeInsets.only(top: 25, bottom: 10),
+      padding: EdgeInsets.only(top: 25.h, bottom: 10.h),
       child: Text(
         title,
         style: GoogleFonts.plusJakartaSans(
           color: Colors.white,
-          fontSize: 16,
+          fontSize: 16.sp,
           fontWeight: FontWeight.w500,
         ),
       ),
@@ -303,29 +304,29 @@ class _ProfilePageState extends State<ProfilePage> {
     VoidCallback? onTap,
   }) {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-      height: 60,
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 8.h),
+      height: 60.h,
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
-          Icon(icon, color: Colors.white, size: 24),
-          const SizedBox(width: 15),
+          Icon(icon, color: Colors.white, size: 24.sp),
+          SizedBox(width: 15.w),
           Expanded(
             child: Text(
               label,
               style: GoogleFonts.plusJakartaSans(
                 color: Colors.white,
-                fontSize: 15,
+                fontSize: 15.sp,
               ),
             ),
           ),
           SizedBox(
-            width: 150,
-            height: 40,
+            width: 150.w,
+            height: 40.h,
             child: TextField(
               controller: controller,
               readOnly: readOnly,
@@ -336,23 +337,23 @@ class _ProfilePageState extends State<ProfilePage> {
               inputFormatters: isNumeric
                   ? [FilteringTextInputFormatter.allow(RegExp(r'^\d*\.?\d*'))]
                   : null,
-              style: GoogleFonts.inter(color: Colors.white, fontSize: 14),
+              style: GoogleFonts.inter(color: Colors.white, fontSize: 14.sp),
               decoration: InputDecoration(
                 filled: true,
                 fillColor: inputBg,
-                contentPadding: const EdgeInsets.symmetric(horizontal: 12),
+                contentPadding: EdgeInsets.symmetric(horizontal: 12.w),
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(8),
+                  borderRadius: BorderRadius.circular(8.r),
                   borderSide: BorderSide.none,
                 ),
               ),
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10.w),
           Icon(
             readOnly ? Icons.calendar_month : Icons.edit,
             color: Colors.white54,
-            size: 16,
+            size: 16.sp,
           ),
         ],
       ),
@@ -362,23 +363,23 @@ class _ProfilePageState extends State<ProfilePage> {
   // Toggle Gender แบบมีเอฟเฟกต์เรืองแสง
   Widget _buildGenderField() {
     return Container(
-      margin: const EdgeInsets.only(bottom: 12),
-      padding: const EdgeInsets.symmetric(horizontal: 16),
-      height: 60,
+      margin: EdgeInsets.only(bottom: 12.h),
+      padding: EdgeInsets.symmetric(horizontal: 16.w),
+      height: 60.h,
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(12),
+        borderRadius: BorderRadius.circular(12.r),
       ),
       child: Row(
         children: [
-          const Icon(Icons.transgender, color: Colors.white, size: 24),
-          const SizedBox(width: 15),
+          Icon(Icons.transgender, color: Colors.white, size: 24.sp),
+          SizedBox(width: 15.w),
           Expanded(
             child: Text(
               'Gender',
               style: GoogleFonts.plusJakartaSans(
                 color: Colors.white,
-                fontSize: 15,
+                fontSize: 15.sp,
               ),
             ),
           ),
@@ -389,13 +390,13 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Icon(
               Icons.man,
               color: selectedGender == 'Male' ? cyanAccent : Colors.white24,
-              size: 32,
+              size: 32.sp,
               shadows: selectedGender == 'Male'
-                  ? [Shadow(color: cyanAccent, blurRadius: 15)]
+                  ? [Shadow(color: cyanAccent, blurRadius: 15.r)]
                   : null, // เอฟเฟกต์เรืองแสง
             ),
           ),
-          const SizedBox(width: 15),
+          SizedBox(width: 15.w),
 
           // ปุ่มผู้หญิง
           GestureDetector(
@@ -403,13 +404,13 @@ class _ProfilePageState extends State<ProfilePage> {
             child: Icon(
               Icons.woman,
               color: selectedGender == 'Female' ? pinkAccent : Colors.white24,
-              size: 32,
+              size: 32.sp,
               shadows: selectedGender == 'Female'
-                  ? [Shadow(color: pinkAccent, blurRadius: 15)]
+                  ? [Shadow(color: pinkAccent, blurRadius: 15.r)]
                   : null, // เอฟเฟกต์เรืองแสง
             ),
           ),
-          const SizedBox(width: 10),
+          SizedBox(width: 10.w),
         ],
       ),
     );
@@ -441,13 +442,13 @@ class _ProfilePageState extends State<ProfilePage> {
         style: ElevatedButton.styleFrom(
           backgroundColor: cyanAccent,
           foregroundColor: Colors.black,
-          padding: const EdgeInsets.symmetric(horizontal: 30, vertical: 12),
-          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+          padding: EdgeInsets.symmetric(horizontal: 30.w, vertical: 12.h),
+          shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
         ),
         child: Text(
           'Save',
           style: GoogleFonts.orbitron(
-            fontSize: 16,
+            fontSize: 16.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -464,36 +465,36 @@ class _ProfilePageState extends State<ProfilePage> {
   }) {
     return InkWell(
       onTap: onTap, 
-      borderRadius: BorderRadius.circular(12),
+      borderRadius: BorderRadius.circular(12.r),
       child: Container(
-        margin: const EdgeInsets.only(bottom: 12),
-        padding: const EdgeInsets.symmetric(horizontal: 16),
-        height: 60,
+        margin: EdgeInsets.only(bottom: 12.h),
+        padding: EdgeInsets.symmetric(horizontal: 16.w),
+        height: 60.h,
         decoration: BoxDecoration(
           color: cardBg,
-          borderRadius: BorderRadius.circular(12),
+          borderRadius: BorderRadius.circular(12.r),
         ),
         child: Row(
           children: [
             Icon(
               icon,
               color: isDestructive ? Colors.redAccent : Colors.white,
-              size: 24,
+              size: 24.sp,
             ),
-            const SizedBox(width: 15),
+            SizedBox(width: 15.w),
             Expanded(
               child: Text(
                 title,
                 style: GoogleFonts.plusJakartaSans(
                   color: isDestructive ? Colors.redAccent : Colors.white,
-                  fontSize: 15,
+                  fontSize: 15.sp,
                 ),
               ),
             ),
-            const Icon(
+            Icon(
               Icons.arrow_forward_ios,
               color: Colors.white54,
-              size: 16,
+              size: 16.sp,
             ),
           ],
         ),

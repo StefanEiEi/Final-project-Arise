@@ -1,12 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:percent_indicator/percent_indicator.dart';
-import 'Rank.dart';
-import 'Muscle.dart';
-import 'SettingsPage.dart';
-import 'ProfilePage.dart';
-import 'QuestData.dart';
-import 'services/DataService.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../models/Rank.dart';
+import '../../models/Muscle.dart';
+import '../system/SettingsPage.dart';
+import '../profile/ProfilePage.dart';
+import '../quest/QuestData.dart';
+import '../../services/DataService.dart';
 import 'dart:io';
 
 class DashboardPage extends StatefulWidget {
@@ -19,32 +20,41 @@ class DashboardPage extends StatefulWidget {
 class _DashboardPageState extends State<DashboardPage> {
   @override
   Widget build(BuildContext context) {
-    // ข้อมูลจำลอง
-    final int userLevel = 1;
-    final int userExp = 45;
+    final ds = DataService.instance;
+
+    // คำนวณ Level จาก EXP รวม
+    final int totalExp =
+        ds.chestExp + ds.shoulderExp + ds.bicepsExp + ds.absExp + ds.legsExp;
+    final int userLevel = (totalExp ~/ 100) + 1;
+    final int userExp = totalExp % 100;
+
     final List<Muscle> muscles = [
-      Muscle(name: 'Shoulder', imagePath: 'shoulder.png', level: 50),
-      Muscle(name: 'Biceps', imagePath: 'Bicep.png', level: 10),
-      Muscle(name: 'Breast', imagePath: 'chest.png', level: 10),
-      Muscle(name: 'Abs', imagePath: 'ads.png', level: 20),
-      Muscle(name: 'Leg', imagePath: 'leg.png', level: 15),
+      Muscle(
+        name: 'Shoulder',
+        imagePath: 'shoulder.png',
+        level: ds.shoulderExp,
+      ),
+      Muscle(name: 'Biceps', imagePath: 'Bicep.png', level: ds.bicepsExp),
+      Muscle(name: 'Breast', imagePath: 'chest.png', level: ds.chestExp),
+      Muscle(name: 'Abs', imagePath: 'ads.png', level: ds.absExp),
+      Muscle(name: 'Leg', imagePath: 'leg.png', level: ds.legsExp),
     ];
 
     return Scaffold(
       backgroundColor: const Color(0xFF0A101C),
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(vertical: 20),
+          padding: EdgeInsets.symmetric(vertical: 20.h),
           child: Column(
             children: [
-              _buildHeader(context), 
-              const SizedBox(height: 20),
-              _buildProfileCard(context, userLevel, userExp), 
-              const SizedBox(height: 30),
+              _buildHeader(context),
+              SizedBox(height: 20.h),
+              _buildProfileCard(context, userLevel, userExp),
+              SizedBox(height: 30.h),
               _buildBodyMap(muscles),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               _buildActionButtons(context),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
               _buildStatusSection(muscles),
             ],
           ),
@@ -57,7 +67,7 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _buildHeader(BuildContext context) {
     // เพิ่ม context
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
+      padding: EdgeInsets.symmetric(horizontal: 20.w),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
@@ -65,7 +75,7 @@ class _DashboardPageState extends State<DashboardPage> {
             'SYSTEM',
             style: GoogleFonts.orbitron(
               color: const Color(0xFF00FFFF),
-              fontSize: 24,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
             ),
           ),
@@ -76,7 +86,7 @@ class _DashboardPageState extends State<DashboardPage> {
                 '14',
                 const Color(0xFFFF5300),
               ),
-              const SizedBox(width: 15),
+              SizedBox(width: 15.w),
               _headerIcon(
                 'assets/images/heart.png',
                 '2/2',
@@ -96,9 +106,9 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ).then((_) => setState(() {}));
                 },
-                child: const Icon(Icons.person, color: Colors.cyan, size: 28),
+                child: Icon(Icons.person, color: Colors.cyan, size: 28.sp),
               ),
-              const SizedBox(width: 10),
+              SizedBox(width: 10.w),
               GestureDetector(
                 onTap: () {
                   Navigator.push(
@@ -108,7 +118,7 @@ class _DashboardPageState extends State<DashboardPage> {
                     ),
                   ).then((_) => setState(() {}));
                 },
-                child: const Icon(Icons.settings, color: Colors.cyan, size: 28),
+                child: Icon(Icons.settings, color: Colors.cyan, size: 28.sp),
               ),
             ],
           ),
@@ -120,13 +130,13 @@ class _DashboardPageState extends State<DashboardPage> {
   Widget _headerIcon(String path, String text, Color color) {
     return Row(
       children: [
-        Image.asset(path, width: 24, height: 24),
-        const SizedBox(width: 5),
+        Image.asset(path, width: 24.w, height: 24.h),
+        SizedBox(width: 5.w),
         Text(
           text,
           style: GoogleFonts.inter(
             color: color,
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.bold,
           ),
         ),
@@ -144,21 +154,23 @@ class _DashboardPageState extends State<DashboardPage> {
         ).then((_) => setState(() {}));
       },
       child: Container(
-        width: 350,
-        padding: const EdgeInsets.all(20),
+        width: 350.w,
+        padding: EdgeInsets.all(20.w),
         decoration: BoxDecoration(
           color: const Color(0xFF13172B),
-          borderRadius: BorderRadius.circular(20),
+          borderRadius: BorderRadius.circular(20.r),
         ),
         child: Row(
           children: [
             Container(
-              width: 80,
-              height: 80,
+              width: 80.w,
+              height: 80.h,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                border: Border.all(color: const Color(0xFF39D2C0), width: 2),
-                image: ds.profileImagePath != null
+                border: Border.all(color: const Color(0xFF39D2C0), width: 2.w),
+                image:
+                    (ds.profileImagePath != null &&
+                        File(ds.profileImagePath!).existsSync())
                     ? DecorationImage(
                         image: FileImage(File(ds.profileImagePath!)),
                         fit: BoxFit.cover,
@@ -169,21 +181,21 @@ class _DashboardPageState extends State<DashboardPage> {
                       ),
               ),
             ),
-            const SizedBox(width: 15),
+            SizedBox(width: 15.w),
             Expanded(
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   RichText(
                     text: TextSpan(
-                      style: const TextStyle(fontSize: 18),
+                      style: TextStyle(fontSize: 18.sp),
                       children: [
                         const TextSpan(
                           text: 'Hunter ',
                           style: TextStyle(color: Colors.white),
                         ),
                         TextSpan(
-                          text: ds.playerName, 
+                          text: ds.playerName,
                           style: const TextStyle(color: Color(0xFFFFD700)),
                         ),
                       ],
@@ -199,7 +211,7 @@ class _DashboardPageState extends State<DashboardPage> {
                       _rankBadge(AriseRank.getLabel(level)),
                     ],
                   ),
-                  const SizedBox(height: 10),
+                  SizedBox(height: 10.h),
                   _expBar(exp),
                 ],
               ),
@@ -212,16 +224,16 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _rankBadge(String label) {
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+      padding: EdgeInsets.symmetric(horizontal: 10.w, vertical: 4.h),
       decoration: BoxDecoration(
         color: const Color(0x33FFD700),
-        borderRadius: BorderRadius.circular(5),
+        borderRadius: BorderRadius.circular(5.r),
       ),
       child: Text(
         label,
         style: GoogleFonts.orbitron(
           color: const Color(0xFFFFD700),
-          fontSize: 16,
+          fontSize: 16.sp,
         ),
       ),
     );
@@ -233,15 +245,15 @@ class _DashboardPageState extends State<DashboardPage> {
       children: [
         Text(
           '$exp/100',
-          style: const TextStyle(color: Color(0xFF00FFFF), fontSize: 12),
+          style: TextStyle(color: const Color(0xFF00FFFF), fontSize: 12.sp),
         ),
-        const SizedBox(height: 4),
+        SizedBox(height: 4.h),
         LinearPercentIndicator(
-          lineHeight: 10,
-          percent: exp / 100,
+          lineHeight: 10.h,
+          percent: exp / 100.0,
           progressColor: const Color(0xFF00C0E8),
           backgroundColor: Colors.white12,
-          barRadius: const Radius.circular(5),
+          barRadius: Radius.circular(5.r),
           padding: EdgeInsets.zero,
         ),
       ],
@@ -254,13 +266,13 @@ class _DashboardPageState extends State<DashboardPage> {
       children: [
         Image.asset(
           'assets/images/New_Base_body.png',
-          width: 300,
+          width: 300.w,
           fit: BoxFit.contain,
         ),
         ...muscles.map(
           (m) => Image.asset(
             'assets/images/${m.imagePath}',
-            width: 300,
+            width: 300.w,
             fit: BoxFit.contain,
             color: AriseRank.getColor(m.level),
             colorBlendMode: BlendMode.srcIn,
@@ -281,7 +293,7 @@ class _DashboardPageState extends State<DashboardPage> {
             MaterialPageRoute(builder: (context) => const SelectQuestPage()),
           ).then((_) => setState(() {}));
         }),
-        const SizedBox(width: 20),
+        SizedBox(width: 20.w),
         _btn('REST', const Color(0xFF00FC97), () {
           // โลจิกสำหรับปุ่ม REST ในหน้า Dashboard (Skip Day)
           print("Skip exercise day");
@@ -292,10 +304,10 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _btn(String label, Color color, VoidCallback onPressed) {
     return ElevatedButton(
-      onPressed: onPressed, 
+      onPressed: onPressed,
       style: ElevatedButton.styleFrom(
         backgroundColor: color,
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8)),
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.r)),
       ),
       child: Text(
         label,
@@ -309,11 +321,11 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _buildStatusSection(List<Muscle> muscles) {
     return Container(
-      width: 350,
-      padding: const EdgeInsets.all(20),
+      width: 350.w,
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: const Color(0xFF13172B),
-        borderRadius: BorderRadius.circular(20),
+        borderRadius: BorderRadius.circular(20.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -322,10 +334,10 @@ class _DashboardPageState extends State<DashboardPage> {
             'Status',
             style: GoogleFonts.orbitron(
               color: const Color(0xFF00FFFF),
-              fontSize: 22,
+              fontSize: 22.sp,
             ),
           ),
-          const SizedBox(height: 15),
+          SizedBox(height: 15.h),
           ...muscles.map((m) => _statusRow(m)),
         ],
       ),
@@ -334,24 +346,23 @@ class _DashboardPageState extends State<DashboardPage> {
 
   Widget _statusRow(Muscle m) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 8),
+      padding: EdgeInsets.symmetric(vertical: 8.h),
       child: Row(
         children: [
           SizedBox(
-            width: 80,
+            width: 80.w,
             child: Text(m.name, style: const TextStyle(color: Colors.cyan)),
           ),
           Text('${m.level}', style: const TextStyle(color: Colors.white)),
           Expanded(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
+              padding: EdgeInsets.symmetric(horizontal: 10.w),
               child: LinearPercentIndicator(
-                lineHeight: 8,
-                percent:
-                    (m.level % 20) / 20, // ขึ้น Rank ทุกๆ 20 เลเวล
+                lineHeight: 8.h,
+                percent: (m.level % 20) / 20.0, // ขึ้น Rank ทุกๆ 20 เลเวล
                 progressColor: const Color(0xFF00FFFF),
                 backgroundColor: Colors.white10,
-                barRadius: const Radius.circular(4),
+                barRadius: Radius.circular(4.r),
                 padding: EdgeInsets.zero,
               ),
             ),

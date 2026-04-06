@@ -1,7 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'DashboardPage.dart';
-import 'LoginPage.dart';
+import '../page/dashboard/DashboardPage.dart';
+import '../page/auth/LoginPage.dart';
 
 class AuthWrapper extends StatelessWidget {
   const AuthWrapper({super.key});
@@ -15,13 +15,15 @@ class AuthWrapper extends StatelessWidget {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return const Scaffold(
             backgroundColor: Color(0xFF0A101C),
-            body: Center(child: CircularProgressIndicator(color: Colors.cyanAccent)),
+            body: Center(
+              child: CircularProgressIndicator(color: Colors.cyanAccent),
+            ),
           );
         }
 
-        // 2. มีบัญชีอยู่แล้วไปหน้า Dashboard 
+        // 2. มีบัญชีอยู่แล้วไปหน้า Dashboard
         if (snapshot.hasData) {
-          return const DashboardPage(); 
+          return const DashboardPage();
         }
 
         // 3. ไม่มีบัญชีไปหน้า Login เริ่มต้น

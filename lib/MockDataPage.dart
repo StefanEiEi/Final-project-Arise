@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'services/DataService.dart';
-import 'RestPage.dart';
+import 'page/quest/RestPage.dart';
 class MockDataPage extends StatefulWidget {
   final int currentSet;
   const MockDataPage({super.key, required this.currentSet});

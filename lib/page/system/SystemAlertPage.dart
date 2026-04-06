@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 
 class SystemAlertPage extends StatelessWidget {
   const SystemAlertPage({super.key});
@@ -23,8 +24,8 @@ class SystemAlertPage extends StatelessWidget {
           children: [
             // 1. Alert Icon / Image
             Container(
-              width: 300,
-              height: 300,
+              width: 300.w,
+              height: 300.h,
               decoration: const BoxDecoration(
                 image: DecorationImage(
                   fit: BoxFit.contain,
@@ -32,44 +33,44 @@ class SystemAlertPage extends StatelessWidget {
                 ),
               ),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             // 2. Title
             Text(
               'SYSTEM ALERT!',
               style: GoogleFonts.dmSans(
                 color: pinkAlert,
-                fontSize: 30,
+                fontSize: 30.sp,
                 fontWeight: FontWeight.bold,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h),
 
             // 3. Subtitle
             Text(
               'Want to unlock?',
               style: GoogleFonts.orbitron(
                 color: Colors.white,
-                fontSize: 14,
+                fontSize: 14.sp,
                 fontWeight: FontWeight.w800,
               ),
             ),
-            const SizedBox(height: 10),
+            SizedBox(height: 10.h),
 
             // 4. Thai Message (แก้ไขจากตัวต่างดาว)
             Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 40),
+              padding: EdgeInsets.symmetric(horizontal: 40.w),
               child: Text(
                 'คุณยังไม่ได้ทำภารกิจรายวัน\nกรุณาเสริมพลังให้ร่างกายก่อนใช้งาน',
                 textAlign: TextAlign.center,
                 style: GoogleFonts.orbitron(
                   color: textSecondary,
-                  fontSize: 14,
+                  fontSize: 14.sp,
                   fontWeight: FontWeight.w500,
                 ),
               ),
             ),
-            const SizedBox(height: 30),
+            SizedBox(height: 30.h),
 
             // 5. Start Mission Button
             _buildAriseButton(
@@ -78,7 +79,7 @@ class SystemAlertPage extends StatelessWidget {
               color: const Color(0xFFFF0055),
               onPressed: () => print('Mission Started!'),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             // 6. Rest Button
             _buildAriseButton(
@@ -87,7 +88,7 @@ class SystemAlertPage extends StatelessWidget {
               color: cyanMain,
               onPressed: () => print('Resting...'),
             ),
-            const SizedBox(height: 20),
+            SizedBox(height: 20.h),
 
             // 7. Emergency Unlock
             TextButton(
@@ -96,7 +97,7 @@ class SystemAlertPage extends StatelessWidget {
                 'Emergency Unlock',
                 style: GoogleFonts.orbitron(
                   color: textSecondary,
-                  fontSize: 12,
+                  fontSize: 12.sp,
                   decoration: TextDecoration.underline,
                 ),
               ),
@@ -116,7 +117,7 @@ class SystemAlertPage extends StatelessWidget {
   }) {
     return SizedBox(
       width: MediaQuery.of(context).size.width * 0.7,
-      height: 60,
+      height: 60.h,
       child: ElevatedButton(
         onPressed: onPressed,
         style: ElevatedButton.styleFrom(
@@ -124,10 +125,10 @@ class SystemAlertPage extends StatelessWidget {
           foregroundColor: Colors.black,
           elevation: 0,
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           textStyle: GoogleFonts.orbitron(
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.w900,
           ),
         ),

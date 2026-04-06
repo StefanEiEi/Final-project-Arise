@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'RegisterPage.dart';
 
 class LoginPage extends StatelessWidget {
@@ -50,53 +51,53 @@ class LoginPage extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   // Header
-                  const Text(
+                  Text(
                     'Arise',
                     style: TextStyle(
                       fontFamily: 'Orbitron',
-                      fontSize: 48,
+                      fontSize: 48.sp,
                       color: Colors.cyanAccent,
                       fontWeight: FontWeight.bold,
                       shadows: [
-                        Shadow(color: Colors.cyanAccent, blurRadius: 20),
+                        Shadow(color: Colors.cyanAccent, blurRadius: 20.r),
                       ],
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
                   // Logo
                   Image.asset(
                     'assets/images/logo.png',
-                    width: 200,
-                    height: 200,
+                    width: 200.w,
+                    height: 200.h,
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
-                  const Text(
+                  Text(
                     'Welcome back!',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 24,
+                      fontSize: 24.sp,
                       fontFamily: 'Orbitron',
                       fontWeight: FontWeight.w800,
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
-                  const Text(
+                  Text(
                     'Log in to your ARISE account',
                     style: TextStyle(
                       color: Colors.white,
-                      fontSize: 16,
+                      fontSize: 14.sp,
                       fontFamily: 'Orbitron',
                       fontWeight: FontWeight.normal,
                     ),
                   ),
 
-                  const SizedBox(height: 40),
+                  SizedBox(height: 40.h),
 
                   // buttom login with Google
                   InkWell(
@@ -112,21 +113,21 @@ class LoginPage extends StatelessWidget {
                       }
                     },
                     child: Container(
-                      width: 250,
-                      padding: const EdgeInsets.symmetric(
-                        vertical: 12,
-                        horizontal: 16,
+                      width: 250.w,
+                      padding: EdgeInsets.symmetric(
+                        vertical: 12.h,
+                        horizontal: 16.w,
                       ),
                       decoration: BoxDecoration(
                         color: Colors.white,
-                        borderRadius: BorderRadius.circular(10),
+                        borderRadius: BorderRadius.circular(10.r),
                       ),
                       child: Row(
                         mainAxisSize: MainAxisSize.min,
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
-                          Image.asset('assets/images/Google.jpg', height: 24),
-                          const SizedBox(width: 12),
+                          Image.asset('assets/images/Google.jpg', height: 24.h),
+                          SizedBox(width: 12.w),
                           const Text(
                             'Login with Google',
                             style: TextStyle(
@@ -139,7 +140,7 @@ class LoginPage extends StatelessWidget {
                     ),
                   ),
 
-                  const SizedBox(height: 20),
+                  SizedBox(height: 20.h),
 
                   Row(
                     mainAxisSize: MainAxisSize.max,
@@ -153,7 +154,7 @@ class LoginPage extends StatelessWidget {
                             fontFamily: 'Orbitron',
                             color: Colors.white,
                             fontWeight: FontWeight.normal,
-                            fontSize: 12,
+                            fontSize: 12.sp,
                           ),
                         ),
                       ),

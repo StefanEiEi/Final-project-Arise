@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'services/DataService.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../services/DataService.dart';
 
 class SettingsPage extends StatefulWidget {
   const SettingsPage({super.key});
@@ -70,17 +71,17 @@ class _SettingsPageState extends State<SettingsPage> {
       backgroundColor: bgDark,
       body: SafeArea(
         child: SingleChildScrollView(
-          padding: const EdgeInsets.symmetric(horizontal: 20),
+          padding: EdgeInsets.symmetric(horizontal: 20.w),
           child: Column(
             children: [
               _buildHeader(context),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
               _buildBlockSchedule(),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
               _buildAppBlockList(),
-              const SizedBox(height: 30),
+              SizedBox(height: 30.h),
               _buildSaveButton(),
-              const SizedBox(height: 20),
+              SizedBox(height: 20.h),
             ],
           ),
         ),
@@ -91,15 +92,15 @@ class _SettingsPageState extends State<SettingsPage> {
   // 1. ส่วนหัวหน้าจอ
   Widget _buildHeader(BuildContext context) {
     return SizedBox(
-      height: 70,
+      height: 70.h,
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           IconButton(
-            icon: const Icon(
+            icon: Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
-              size: 24,
+              size: 24.sp,
             ),
             onPressed: () => Navigator.pop(context),
           ),
@@ -107,11 +108,11 @@ class _SettingsPageState extends State<SettingsPage> {
             'SETTING',
             style: GoogleFonts.orbitron(
               color: cyanAccent,
-              fontSize: 24,
+              fontSize: 24.sp,
               fontWeight: FontWeight.bold,
           ),
           ),
-          const SizedBox(width: 48), 
+          SizedBox(width: 48.w), 
         ],
       ),
     );
@@ -120,31 +121,31 @@ class _SettingsPageState extends State<SettingsPage> {
   // 2. ส่วน Block Schedule Card
   Widget _buildBlockSchedule() {
     return Container(
-      padding: const EdgeInsets.all(20),
+      padding: EdgeInsets.all(20.w),
       decoration: BoxDecoration(
         color: cardBg,
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(15.r),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Row(
             children: [
-              FaIcon(FontAwesomeIcons.clock, color: cyanAccent, size: 20),
-              const SizedBox(width: 10),
+              FaIcon(FontAwesomeIcons.clock, color: cyanAccent, size: 20.sp),
+              SizedBox(width: 10.w),
               Text(
                 'Block schedule',
-                style: GoogleFonts.orbitron(color: Colors.white, fontSize: 16),
+                style: GoogleFonts.orbitron(color: Colors.white, fontSize: 16.sp),
               ),
             ],
           ),
-          const SizedBox(height: 20),
+          SizedBox(height: 20.h),
           _buildTimeInput('Start time', startTimeValue, startAmPm, (val) {
             setState(() => startTimeValue = val!);
           }, (val) {
             setState(() => startAmPm = val!);
           }),
-          const SizedBox(height: 15),
+          SizedBox(height: 15.h),
           _buildTimeInput('End time', endTimeValue, endAmPm, (val) {
             setState(() => endTimeValue = val!);
           }, (val) {
@@ -159,14 +160,14 @@ class _SettingsPageState extends State<SettingsPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        Text(label, style: GoogleFonts.orbitron(color: textGray, fontSize: 12)),
-        const SizedBox(height: 8),
+        Text(label, style: GoogleFonts.orbitron(color: textGray, fontSize: 12.sp)),
+        SizedBox(height: 8.h),
         Container(
           width: double.infinity,
-          padding: const EdgeInsets.symmetric(horizontal: 15, vertical: 5),
+          padding: EdgeInsets.symmetric(horizontal: 15.w, vertical: 5.h),
           decoration: BoxDecoration(
             color: const Color(0xFF1A2039),
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(10.r),
           ),
           child: Row(
             children: [
@@ -175,7 +176,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   child: DropdownButton<int>(
                     value: timeValue,
                     dropdownColor: const Color(0xFF13172B),
-                    style: GoogleFonts.orbitron(color: Colors.white, fontSize: 14),
+                    style: GoogleFonts.orbitron(color: Colors.white, fontSize: 14.sp),
                     items: List.generate(12, (index) {
                       return DropdownMenuItem(
                         value: index + 1,
@@ -186,12 +187,12 @@ class _SettingsPageState extends State<SettingsPage> {
                   ),
                 ),
               ),
-              const SizedBox(width: 15),
+              SizedBox(width: 15.w),
               DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   value: amPm,
                   dropdownColor: const Color(0xFF13172B),
-                  style: GoogleFonts.orbitron(color: Colors.white, fontSize: 14),
+                  style: GoogleFonts.orbitron(color: Colors.white, fontSize: 14.sp),
                   items: const [
                     DropdownMenuItem(value: 'AM', child: Text('AM')),
                     DropdownMenuItem(value: 'PM', child: Text('PM')),
@@ -215,15 +216,15 @@ class _SettingsPageState extends State<SettingsPage> {
           children: [
             Text(
               'Block app',
-              style: GoogleFonts.orbitron(color: Colors.white, fontSize: 18),
+              style: GoogleFonts.orbitron(color: Colors.white, fontSize: 18.sp),
             ),
             Text(
               '$activeBlockCount/4 Block',
-              style: GoogleFonts.orbitron(color: cyanAccent, fontSize: 14),
+              style: GoogleFonts.orbitron(color: cyanAccent, fontSize: 14.sp),
             ),
           ],
         ),
-        const SizedBox(height: 20),
+        SizedBox(height: 20.h),
         _buildAppRow(
           'Facebook',
           'assets/images/facebook.png',
@@ -259,11 +260,11 @@ class _SettingsPageState extends State<SettingsPage> {
     Function(bool) onChanged,
   ) {
     return Padding(
-      padding: const EdgeInsets.symmetric(vertical: 10),
+      padding: EdgeInsets.symmetric(vertical: 10.h),
       child: Row(
         children: [
-          Image.asset(iconPath, width: 40, height: 40),
-          const SizedBox(width: 15),
+          Image.asset(iconPath, width: 40.w, height: 40.h),
+          SizedBox(width: 15.w),
           Expanded(
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
@@ -272,7 +273,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   name,
                   style: GoogleFonts.poppins(
                     color: Colors.white,
-                    fontSize: 16,
+                    fontSize: 16.sp,
                     fontWeight: FontWeight.w500,
                   ),
                 ),
@@ -280,7 +281,7 @@ class _SettingsPageState extends State<SettingsPage> {
                   isBlocked ? 'Blocked' : 'Active',
                   style: GoogleFonts.poppins(
                     color: isBlocked ? Colors.red : Colors.green,
-                    fontSize: 12,
+                    fontSize: 12.sp,
                   ),
                 ),
               ],
@@ -299,7 +300,7 @@ class _SettingsPageState extends State<SettingsPage> {
   Widget _buildSaveButton() {
     return SizedBox(
       width: double.infinity,
-      height: 55,
+      height: 55.h,
       child: ElevatedButton(
         onPressed: () async {
           String sTime = '${startTimeValue.toString().padLeft(2, '0')}:00 $startAmPm';
@@ -319,14 +320,14 @@ class _SettingsPageState extends State<SettingsPage> {
         style: ElevatedButton.styleFrom(
           backgroundColor: const Color(0xFF00D4FF),
           shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(12),
+            borderRadius: BorderRadius.circular(12.r),
           ),
         ),
         child: Text(
           'SAVE SETTING',
           style: GoogleFonts.orbitron(
             color: Colors.black,
-            fontSize: 18,
+            fontSize: 18.sp,
             fontWeight: FontWeight.w900,
           ),
         ),

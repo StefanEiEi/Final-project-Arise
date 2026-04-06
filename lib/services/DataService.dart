@@ -12,6 +12,7 @@ class DataService {
   List<bool> blockedApps = [false, false, false, false]; // fb, ig, tiktok, youtube
   String startTime = "08:00 AM";
   String endTime = "05:00 PM";
+  bool hasCompletedShakeCheck = false;
 
   // Cloud State
   int chestExp = 0;
@@ -48,6 +49,9 @@ class DataService {
     // Load times
     startTime = prefs.getString('startTime') ?? "08:00 AM";
     endTime = prefs.getString('endTime') ?? "05:00 PM";
+
+    // Load Shake Check status
+    hasCompletedShakeCheck = prefs.getBool('hasCompletedShakeCheck') ?? false;
 
     // Load Profile Data from local source first
     playerName = prefs.getString('playerName') ?? 'Hunter';
@@ -119,6 +123,12 @@ class DataService {
     } catch (e) {
       print("Error syncing EXPs: $e");
     }
+  }
+
+  Future<void> completeShakeCheck() async {
+    hasCompletedShakeCheck = true;
+    final prefs = await SharedPreferences.getInstance();
+    await prefs.setBool('hasCompletedShakeCheck', true);
   }
 
   Future<void> updateSettings(String start, String end, List<bool> apps) async {

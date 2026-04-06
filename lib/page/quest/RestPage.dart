@@ -1,8 +1,9 @@
 import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'services/DataService.dart';
-import 'CompletedPage.dart';
+import 'package:flutter_screenutil/flutter_screenutil.dart';
+import '../../services/DataService.dart';
+import '../../CompletedPage.dart';
 import 'QuestData.dart';
 
 class RestPage extends StatefulWidget {
@@ -78,45 +79,45 @@ class _RestPageState extends State<RestPage> {
               children: [
                 Text(
                   'REST',
-                  style: GoogleFonts.orbitron(color: cyanAccent, fontSize: 40, fontWeight: FontWeight.bold, letterSpacing: 2.0),
+                  style: GoogleFonts.orbitron(color: cyanAccent, fontSize: 40.sp, fontWeight: FontWeight.bold, letterSpacing: 2.0),
                 ),
-                const SizedBox(height: 30),
+                SizedBox(height: 30.h),
                 Container(
                   width: MediaQuery.of(context).size.width * 0.85,
-                  padding: const EdgeInsets.symmetric(vertical: 40, horizontal: 20),
-                  decoration: BoxDecoration(color: cardBg, borderRadius: BorderRadius.circular(24)),
+                  padding: EdgeInsets.symmetric(vertical: 40.h, horizontal: 20.w),
+                  decoration: BoxDecoration(color: cardBg, borderRadius: BorderRadius.circular(24.r)),
                   child: Column(
                     children: [
-                      Image.asset('assets/images/Calidation.png', height: 180, fit: BoxFit.contain),
-                      const SizedBox(height: 30),
+                      Image.asset('assets/images/Calidation.png', height: 180.h, fit: BoxFit.contain),
+                      SizedBox(height: 30.h),
                       Text(
                         _formattedTime,
                         style: GoogleFonts.orbitron(
-                          color: cyanAccent, fontSize: 48, fontWeight: FontWeight.bold,
-                          shadows: [Shadow(color: cyanAccent.withOpacity(0.6), blurRadius: 15)],
+                          color: cyanAccent, fontSize: 48.sp, fontWeight: FontWeight.bold,
+                          shadows: [Shadow(color: cyanAccent.withOpacity(0.6), blurRadius: 15.r)],
                         ),
                       ),
-                      const SizedBox(height: 15),
-                      Text('PUSH-UP', style: GoogleFonts.orbitron(color: Colors.white, fontSize: 18, fontWeight: FontWeight.bold)),
-                      const SizedBox(height: 15),
-                      Text('Upcoming: Set ${widget.currentSet + 1} of 3', style: GoogleFonts.orbitron(color: Colors.white70, fontSize: 14)),
-                      const SizedBox(height: 8),
-                      Text('Target: 15 Reps', style: GoogleFonts.orbitron(color: Colors.white70, fontSize: 14)),
+                      SizedBox(height: 15.h),
+                      Text('PUSH-UP', style: GoogleFonts.orbitron(color: Colors.white, fontSize: 18.sp, fontWeight: FontWeight.bold)),
+                      SizedBox(height: 15.h),
+                      Text('Upcoming: Set ${widget.currentSet + 1} of 3', style: GoogleFonts.orbitron(color: Colors.white70, fontSize: 14.sp)),
+                      SizedBox(height: 8.h),
+                      Text('Target: 15 Reps', style: GoogleFonts.orbitron(color: Colors.white70, fontSize: 14.sp)),
                     ],
                   ),
                 ),
-                const SizedBox(height: 40),
+                SizedBox(height: 40.h),
                 SizedBox(
                   width: MediaQuery.of(context).size.width * 0.7,
-                  height: 55,
+                  height: 55.h,
                   child: ElevatedButton(
                     onPressed: _finishRest,
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.white,
                       foregroundColor: Colors.black,
-                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.r)),
                     ),
-                    child: Text('DONE', style: GoogleFonts.orbitron(fontSize: 20, fontWeight: FontWeight.bold)),
+                    child: Text('DONE', style: GoogleFonts.orbitron(fontSize: 20.sp, fontWeight: FontWeight.bold)),
                   ),
                 ),
               ],
