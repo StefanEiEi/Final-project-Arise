@@ -1,23 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:firebase_core/firebase_core.dart';
-import 'package:project_arise/page/camera/camera_view.dart';
+import 'package:project_arise/page/views/camera_view.dart';
 import 'package:shake/shake.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:camera/camera.dart'; // เพิ่ม import กล้อง
 import 'services/DataService.dart';
-import 'core/AuthWrapper.dart';
-import 'page/auth/RegisterPage.dart';
-import 'page/dashboard/DashboardPage.dart';
-import 'page/ShakeOnboardingPage.dart';
+// import 'core/AuthWrapper.dart';
+// import 'page/auth/RegisterPage.dart';
+// import 'page/dashboard/DashboardPage.dart';
+// import 'page/ShakeOnboardingPage.dart';
 
-// ประกาศตัวแปร global เพื่อให้ไฟล์อื่นดึงไปใช้ได้ (เหมือนในคลิป แต่เอา _ ออกเพื่อให้ไฟล์อื่นมองเห็น)
+// ประกาศตัวแปร global เพื่อให้ไฟล์อื่นดึงไปใช้ได้
 late List<CameraDescription> globalCameras;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
   
-  // โหลดกล้องรอไว้เหมือนในคลิป YouTube
+  // โหลดกล้องรอไว้
   globalCameras = await availableCameras();
   
   await Firebase.initializeApp();
